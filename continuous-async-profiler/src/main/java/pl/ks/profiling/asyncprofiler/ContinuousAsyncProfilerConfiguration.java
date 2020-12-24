@@ -1,3 +1,18 @@
+/*
+ * Copyright 2020 Krzysztof Slusarski
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package pl.ks.profiling.asyncprofiler;
 
 import java.io.IOException;
@@ -18,18 +33,18 @@ public class ContinuousAsyncProfilerConfiguration {
             @Value("${asyncProfiler.continuous.archiveOutputsMaxAgeDays:30}") int archiveOutputsMaxAgeDays,
             @Value("${asyncProfiler.continuous.event:.*_13:0.*}") String archiveCopyRegex,
             @Value("${asyncProfiler.continuous.event:wall}") String event,
-            @Value("${asyncProfiler.continuous.outputDir:logs}") String outputDir
+            @Value("${asyncProfiler.continuous.outputDir.archive:logs/archive}") String outputDirArchive,
+            @Value("${asyncProfiler.continuous.outputDir.continuous:logs/continuous}") String outputDirContinuous
     ) {
         ContinuousAsyncProfilerProperties properties = ContinuousAsyncProfilerProperties.builder()
                 .enabled(enabled)
                 .event(event)
-                .outputDir(outputDir)
                 .dumpIntervalSeconds(dumpIntervalSeconds)
                 .continuousOutputsMaxAgeHours(continuousOutputsMaxAgeHours)
                 .archiveOutputsMaxAgeDays(archiveOutputsMaxAgeDays)
                 .archiveCopyRegex(archiveCopyRegex)
-                .continuousOutputDir(outputDir + "/continuous")
-                .archiveOutputDir(outputDir + "/archive")
+                .continuousOutputDir(outputDirContinuous)
+                .archiveOutputDir(outputDirArchive)
                 .build();
 
         log.info("Staring with configuration: {}", properties);
@@ -51,7 +66,6 @@ public class ContinuousAsyncProfilerConfiguration {
     private void createOutputDirectories(ContinuousAsyncProfilerProperties properties) {
         try {
             log.debug("Checking if output dirs exist");
-            Files.createDirectories(Paths.get(properties.getOutputDir()));
             Files.createDirectories(Paths.get(properties.getArchiveOutputDir()));
             Files.createDirectories(Paths.get(properties.getContinuousOutputDir()));
         } catch (IOException e) {
