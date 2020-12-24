@@ -3,7 +3,7 @@ This is a spring boot library that runs async-profiler in continuous mode.
 
 ## Third party software needed
 
-This project is just a set of tool that run async-profiler. You need to install it on your operating system. 
+This project is just a set of tool that run **async-profiler**. You need to install it on your operating system. 
 
 ### Step 1 - download release or build from sources
 
@@ -18,6 +18,12 @@ Next you need to copy ```libasyncProfiler.so``` file to any of ```java.library.p
 * ```/lib64```
 * ```/lib```
 * ```/usr/lib``` 
+
+If you want to use the other path to  ```libasyncProfiler.so``` you can do it with spring application properties/yaml/... For example:
+
+```properties
+asyncProfiler.continuous.profilerLibPath=/path/to/libasyncProfiler.so
+```
 
 ## How to add use it in spring boot application?
 
@@ -69,5 +75,6 @@ The async-profiler is run **all the time** in **wall-clock mode**. Output from t
 * ```asyncProfiler.continuous.event = wall``` - async-profiler event to fetch
 * ```asyncProfiler.continuous.outputDir.continuous = logs/continuous``` - where continuous output should be stored
 * ```asyncProfiler.continuous.outputDir.archive = logs/archive``` - where archive of the outputs should be stored
-* ```asyncProfiler.continuous.stopWorkFile:profiler-stop``` - path to a file, if the file exists then profiler is not running, using this file you can turn 
+* ```asyncProfiler.continuous.stopWorkFile = profiler-stop``` - path to a file, if the file exists then profiler is not running, using this file you can turn
 on/off profiling in runtime
+* ```asyncProfiler.continuous.profilerLibPath``` - path to ```libasyncProfiler.so```

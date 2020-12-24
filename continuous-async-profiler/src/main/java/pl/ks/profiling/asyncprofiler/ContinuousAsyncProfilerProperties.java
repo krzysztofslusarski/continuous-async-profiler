@@ -22,6 +22,7 @@ import lombok.Value;
 @Builder
 class ContinuousAsyncProfilerProperties {
     boolean enabled;
+    String profilerLibPath;
     String event;
     String stopFile;
     String continuousOutputDir;

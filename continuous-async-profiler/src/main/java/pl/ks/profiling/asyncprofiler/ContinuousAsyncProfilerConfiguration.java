@@ -22,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import one.profiler.AsyncProfiler;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.StringUtils;
 
 @Slf4j
 @Configuration
@@ -33,6 +34,7 @@ public class ContinuousAsyncProfilerConfiguration {
             @Value("${asyncProfiler.continuous.archiveOutputsMaxAgeDays:30}") int archiveOutputsMaxAgeDays,
             @Value("${asyncProfiler.continuous.archiveCopyRegex:.*_13:0.*}") String archiveCopyRegex,
             @Value("${asyncProfiler.continuous.event:wall}") String event,
+            @Value("${asyncProfiler.continuous.profilerLibPath:}") String profilerLibPath,
             @Value("${asyncProfiler.continuous.stopWorkFile:profiler-stop}") String stopFile,
             @Value("${asyncProfiler.continuous.outputDir.archive:logs/archive}") String outputDirArchive,
             @Value("${asyncProfiler.continuous.outputDir.continuous:logs/continuous}") String outputDirContinuous
@@ -47,6 +49,7 @@ public class ContinuousAsyncProfilerConfiguration {
                 .archiveCopyRegex(archiveCopyRegex)
                 .continuousOutputDir(outputDirContinuous)
                 .archiveOutputDir(outputDirArchive)
+                .profilerLibPath(profilerLibPath)
                 .build();
 
         log.info("Staring with configuration: {}", properties);
@@ -57,7 +60,7 @@ public class ContinuousAsyncProfilerConfiguration {
 
         createOutputDirectories(properties);
 
-        AsyncProfiler asyncProfiler = AsyncProfiler.getInstance();
+        AsyncProfiler asyncProfiler = StringUtils.isEmpty(profilerLibPath) ? AsyncProfiler.getInstance() : AsyncProfiler.getInstance(profilerLibPath);
 
         new Thread(new ContinuousAsyncProfilerRunner(asyncProfiler, properties), "cont-prof-runner").start();
         new Thread(new ContinuousAsyncProfilerCleaner(properties), "cont-prof-cleaner").start();
