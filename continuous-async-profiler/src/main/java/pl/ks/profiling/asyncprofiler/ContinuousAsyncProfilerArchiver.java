@@ -27,9 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 class ContinuousAsyncProfilerArchiver implements Runnable {
-    private static final long ONE_MINUTE = 1000 * 60;
-    private static final long ONE_DAY = ONE_MINUTE * 60 * 24;
-
     private final ContinuousAsyncProfilerProperties properties;
 
     @Override
@@ -55,11 +52,12 @@ class ContinuousAsyncProfilerArchiver implements Runnable {
                                 log.info("Will not archive, file exists in archive dir: {}", fileName);
                             }
                         });
-                Thread.sleep(ONE_DAY);
+                Thread.sleep(SleepTime.ONE_DAY);
             } catch (InterruptedException e) {
-                log.error("Cannot list dir: " + properties.getContinuousOutputDir(), e);
+                log.info("Thread interrupted, exiting", e);
+                return;
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("Cannot list dir: " + properties.getContinuousOutputDir(), e);
             }
         }
     }

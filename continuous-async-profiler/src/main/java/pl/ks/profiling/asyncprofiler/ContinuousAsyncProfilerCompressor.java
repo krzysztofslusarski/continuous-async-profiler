@@ -32,8 +32,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 class ContinuousAsyncProfilerCompressor implements Runnable {
-    private static final long ONE_MINUTE = 1000 * 60;
-    private static final long TEN_MINUTES = ONE_MINUTE * 10;
     private final ContinuousAsyncProfilerProperties properties;
 
     @Override
@@ -69,9 +67,10 @@ class ContinuousAsyncProfilerCompressor implements Runnable {
                     counter--;
                 }
 
-                Thread.sleep(TEN_MINUTES);
+                Thread.sleep(SleepTime.TEN_MINUTES);
             } catch (InterruptedException e) {
-                log.error("Cannot list dir: " + properties.getContinuousOutputDir(), e);
+                log.info("Thread interrupted, exiting", e);
+                return;
             } catch (IOException e) {
                 log.error("Some IO failed", e);
             }

@@ -24,9 +24,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 class ContinuousAsyncProfilerCleaner implements Runnable {
-    private static final long ONE_MINUTE = 1000 * 60;
-    private static final long ONE_HOUR = 60 * ONE_MINUTE;
-    private static final long ONE_DAY = ONE_HOUR * 24;
     private final ContinuousAsyncProfilerProperties properties;
 
     @Override
@@ -35,14 +32,15 @@ class ContinuousAsyncProfilerCleaner implements Runnable {
         while (!Thread.interrupted()) {
             try {
                 long currentTime = System.currentTimeMillis();
-                long continuousCutOffTime = currentTime - (properties.getContinuousOutputsMaxAgeHours() * ONE_HOUR);
-                long archiveCutOffTime = currentTime - (properties.getArchiveOutputsMaxAgeDays() * ONE_DAY);
+                long continuousCutOffTime = currentTime - (properties.getContinuousOutputsMaxAgeHours() * SleepTime.ONE_HOUR);
+                long archiveCutOffTime = currentTime - (properties.getArchiveOutputsMaxAgeDays() * SleepTime.ONE_DAY);
                 log.info("Removing old continuous output");
                 delete(properties.getContinuousOutputDir(), continuousCutOffTime);
                 log.info("Removing old archive output");
                 delete(properties.getArchiveOutputDir(), archiveCutOffTime);
-                Thread.sleep(ONE_HOUR);
+                Thread.sleep(SleepTime.ONE_HOUR);
             } catch (InterruptedException e) {
+                log.info("Thread interrupted, exiting", e);
                 return;
             }
         }

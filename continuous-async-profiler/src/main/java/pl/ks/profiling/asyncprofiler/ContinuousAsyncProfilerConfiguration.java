@@ -31,14 +31,16 @@ public class ContinuousAsyncProfilerConfiguration {
             @Value("${asyncProfiler.continuous.dumpIntervalSeconds:60}") int dumpIntervalSeconds,
             @Value("${asyncProfiler.continuous.continuousOutputsMaxAgeHours:24}") int continuousOutputsMaxAgeHours,
             @Value("${asyncProfiler.continuous.archiveOutputsMaxAgeDays:30}") int archiveOutputsMaxAgeDays,
-            @Value("${asyncProfiler.continuous.event:.*_13:0.*}") String archiveCopyRegex,
+            @Value("${asyncProfiler.continuous.archiveCopyRegex:.*_13:0.*}") String archiveCopyRegex,
             @Value("${asyncProfiler.continuous.event:wall}") String event,
+            @Value("${asyncProfiler.continuous.stopWorkFile:profiler-stop}") String stopFile,
             @Value("${asyncProfiler.continuous.outputDir.archive:logs/archive}") String outputDirArchive,
             @Value("${asyncProfiler.continuous.outputDir.continuous:logs/continuous}") String outputDirContinuous
     ) {
         ContinuousAsyncProfilerProperties properties = ContinuousAsyncProfilerProperties.builder()
                 .enabled(enabled)
                 .event(event)
+                .stopFile(stopFile)
                 .dumpIntervalSeconds(dumpIntervalSeconds)
                 .continuousOutputsMaxAgeHours(continuousOutputsMaxAgeHours)
                 .archiveOutputsMaxAgeDays(archiveOutputsMaxAgeDays)

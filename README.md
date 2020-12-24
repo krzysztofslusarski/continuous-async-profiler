@@ -65,7 +65,9 @@ The async-profiler is run **all the time** in **wall-clock mode**. Output from t
 * ```asyncProfiler.continuous.dumpIntervalSeconds = 60``` - time in seconds, how often tool should dump profiler outputs
 * ```asyncProfiler.continuous.continuousOutputsMaxAgeHours = 24``` - time in hours, how long to keep files in the continuous directory
 * ```asyncProfiler.continuous.archiveOutputsMaxAgeDays = 30``` - time in days, how long to keep files in the archive directory
-* ```asyncProfiler.continuous.event = .*_13:0.*``` - regex for file name, which files should be copied from the continuous to the archive directory
+* ```asyncProfiler.continuous.archiveCopyRegex = .*_13:0.*``` - regex for file name, which files should be copied from the continuous to the archive directory
 * ```asyncProfiler.continuous.event = wall``` - async-profiler event to fetch
 * ```asyncProfiler.continuous.outputDir.continuous = logs/continuous``` - where continuous output should be stored
 * ```asyncProfiler.continuous.outputDir.archive = logs/archive``` - where archive of the outputs should be stored
+* ```asyncProfiler.continuous.stopWorkFile:profiler-stop``` - path to a file, if the file exists then profiler is not running, using this file you can turn 
+on/off profiling in runtime

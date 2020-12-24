@@ -16,6 +16,7 @@
 package pl.ks.profiling.asyncprofiler;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;
@@ -37,17 +38,23 @@ class ContinuousAsyncProfilerRunner implements Runnable {
         String params = null;
         while (!Thread.interrupted()) {
             try {
-                log.info("Starting async-profiler");
-                params = createParams();
-                asyncProfiler.execute("start," + params);
-                started = true;
-                Thread.sleep(properties.getDumpIntervalSeconds() * 1000);
-                log.info("Stopping async-profiler");
-                asyncProfiler.execute("stop," + params);
-                started = false;
+                if (stopFileExists()) {
+                    log.info("Stop file exists on filesystem: {}, will not run profiler and go to sleep for 10 minutes", properties.getStopFile());
+                    Thread.sleep(SleepTime.TEN_MINUTES);
+                } else {
+                    log.info("Starting async-profiler");
+                    params = createParams();
+                    asyncProfiler.execute("start," + params);
+                    started = true;
+                    Thread.sleep(properties.getDumpIntervalSeconds() * 1000);
+                    log.info("Stopping async-profiler");
+                    asyncProfiler.execute("stop," + params);
+                    started = false;
+                }
             } catch (IOException e) {
                 log.error("Cannot run profiler", e);
             } catch (InterruptedException e) {
+                log.info("Thread interrupted, exiting", e);
                 return;
             } finally {
                 if (started) {
@@ -59,6 +66,10 @@ class ContinuousAsyncProfilerRunner implements Runnable {
                 }
             }
         }
+    }
+
+    private boolean stopFileExists() {
+        return Paths.get(properties.getStopFile()).toFile().exists();
     }
 
     private String createParams() {
