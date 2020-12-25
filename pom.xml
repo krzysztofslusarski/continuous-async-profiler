@@ -6,6 +6,7 @@
     <name>continuous-async-profiler-parent</name>
     <packaging>pom</packaging>
     <description>Set of utility library that enables async profiler in continuous mode</description>
+    <url>https://github.com/krzysztofslusarski/continuous-async-profiler</url>
 
     <modules>
         <module>continuous-async-profiler</module>
