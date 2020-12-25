@@ -76,5 +76,9 @@ The async-profiler is run **all the time** in **wall-clock mode**. Output from t
 * ```asyncProfiler.continuous.outputDir.continuous = logs/continuous``` - where continuous output should be stored
 * ```asyncProfiler.continuous.outputDir.archive = logs/archive``` - where archive of the outputs should be stored
 * ```asyncProfiler.continuous.stopWorkFile = profiler-stop``` - path to a file, if the file exists then profiler is not running, using this file you can turn
-on/off profiling in runtime
+on/off profiling at runtime
 * ```asyncProfiler.continuous.profilerLibPath``` - path to ```libasyncProfiler.so```
+
+## Troubleshooting
+
+First of all this tool is just an async-profiler runner. If you cannot run plain async-profiler on your OS then you cannot use this tool.
