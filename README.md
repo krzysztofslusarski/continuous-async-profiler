@@ -31,7 +31,7 @@ You just need to add dependency to your spring boot application
 
 ```xml
 <dependency>
-    <groupId>pl.ks.profiling</groupId>
+    <groupId>com.github.krzysztofslusarski</groupId>
     <artifactId>continuous-async-profiler-spring-starter</artifactId>
     <version>1.1</version>
 </dependency>
@@ -45,7 +45,7 @@ with a proper version.
 
 ```xml
 <dependency>
-    <groupId>pl.ks.profiling</groupId>
+    <groupId>com.github.krzysztofslusarski</groupId>
     <artifactId>continuous-async-profiler</artifactId>
     <version>1.1</version>
 </dependency>
