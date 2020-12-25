@@ -13,12 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pl.ks.profiling.asyncprofiler;
+package com.github.krzysztofslusarski.asyncprofiler;
 
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+import lombok.Builder;
+import lombok.Value;
 
-@Configuration
-@Import(ContinuousAsyncProfilerConfiguration.class)
-public class ContinuousAsyncProfilerAutoConfiguration {
+@Value
+@Builder
+class ContinuousAsyncProfilerProperties {
+    boolean enabled;
+    String profilerLibPath;
+    String event;
+    String stopFile;
+    String continuousOutputDir;
+    String archiveOutputDir;
+    int dumpIntervalSeconds;
+    int continuousOutputsMaxAgeHours;
+    int archiveOutputsMaxAgeDays;
+    String archiveCopyRegex;
 }

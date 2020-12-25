@@ -1,1 +1,1 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=pl.ks.profiling.asyncprofiler.ContinuousAsyncProfilerAutoConfiguration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.github.krzysztofslusarski.asyncprofiler.ContinuousAsyncProfilerAutoConfiguration

@@ -13,22 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pl.ks.profiling.asyncprofiler;
+package com.github.krzysztofslusarski.asyncprofiler;
 
-import lombok.Builder;
-import lombok.Value;
-
-@Value
-@Builder
-class ContinuousAsyncProfilerProperties {
-    boolean enabled;
-    String profilerLibPath;
-    String event;
-    String stopFile;
-    String continuousOutputDir;
-    String archiveOutputDir;
-    int dumpIntervalSeconds;
-    int continuousOutputsMaxAgeHours;
-    int archiveOutputsMaxAgeDays;
-    String archiveCopyRegex;
+interface SleepTime {
+    long ONE_MINUTE = 1000 * 60;
+    long TEN_MINUTES = ONE_MINUTE * 10;
+    long ONE_HOUR = 60 * ONE_MINUTE;
+    long ONE_DAY = ONE_HOUR * 24;
 }
