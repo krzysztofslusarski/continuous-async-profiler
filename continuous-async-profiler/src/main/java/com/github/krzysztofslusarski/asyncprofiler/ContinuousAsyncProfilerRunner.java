@@ -46,7 +46,7 @@ class ContinuousAsyncProfilerRunner implements Runnable {
                     params = createParams();
                     asyncProfiler.execute("start," + params);
                     started = true;
-                    Thread.sleep(properties.getDumpIntervalSeconds() * 1000);
+                    Thread.sleep(properties.dumpIntervalMilliseconds());
                     log.info("Stopping async-profiler");
                     asyncProfiler.execute("stop," + params);
                     started = false;

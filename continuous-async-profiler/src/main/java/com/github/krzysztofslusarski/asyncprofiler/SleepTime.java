@@ -15,9 +15,14 @@
  */
 package com.github.krzysztofslusarski.asyncprofiler;
 
-interface SleepTime {
-    long ONE_MINUTE = 1000 * 60;
-    long TEN_MINUTES = ONE_MINUTE * 10;
-    long ONE_HOUR = 60 * ONE_MINUTE;
-    long ONE_DAY = ONE_HOUR * 24;
+import lombok.NoArgsConstructor;
+
+import static lombok.AccessLevel.PRIVATE;
+
+@NoArgsConstructor(access = PRIVATE)
+final class SleepTime {
+    static final long ONE_MINUTE = 1000L * 60;
+    static final long TEN_MINUTES = ONE_MINUTE * 10;
+    static final long ONE_HOUR = 60 * ONE_MINUTE;
+    static final long ONE_DAY = ONE_HOUR * 24;
 }
