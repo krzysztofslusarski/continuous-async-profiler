@@ -55,6 +55,7 @@ class ContinuousAsyncProfilerRunner implements Runnable {
                 log.error("Cannot run profiler", e);
             } catch (InterruptedException e) {
                 log.info("Thread interrupted, exiting", e);
+                Thread.currentThread().interrupt();
                 return;
             } finally {
                 if (started) {

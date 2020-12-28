@@ -57,6 +57,7 @@ class ContinuousAsyncProfilerArchiver implements Runnable {
                 Thread.sleep(SleepTime.ONE_DAY);
             } catch (InterruptedException e) {
                 log.info("Thread interrupted, exiting", e);
+                Thread.currentThread().interrupt();
                 return;
             } catch (IOException e) {
                 log.error("Cannot list dir: " + properties.getContinuousOutputDir(), e);
