@@ -21,6 +21,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.function.BiPredicate;
+import java.util.stream.Stream;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,8 +37,8 @@ class ContinuousAsyncProfilerArchiver implements Runnable {
         Path continuousDir = Paths.get(properties.getContinuousOutputDir());
         BiPredicate<Path, BasicFileAttributes> predicate = (p, basicFileAttributes) -> p.getFileName().toString().matches(properties.getArchiveCopyRegex());
         while (!Thread.interrupted()) {
-            try {
-                Files.find(continuousDir, 1, predicate)
+            try (Stream<Path> archiveStream = Files.find(continuousDir, 1, predicate)) {
+                archiveStream
                         .forEach(sourcePath -> {
                             String fileName = sourcePath.getFileName().toString();
                             String destinationFileName = properties.getArchiveOutputDir() + "/" + fileName;

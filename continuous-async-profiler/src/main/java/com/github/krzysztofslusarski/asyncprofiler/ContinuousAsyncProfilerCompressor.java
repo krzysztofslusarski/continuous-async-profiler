@@ -25,6 +25,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.zip.GZIPOutputStream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,8 +53,8 @@ class ContinuousAsyncProfilerCompressor implements Runnable {
         };
 
         while (!Thread.interrupted()) {
-            try {
-                List<Path> notCompressedFiles = Files.find(continuousDir, 1, predicate)
+            try (Stream<Path> pathStream = Files.find(continuousDir, 1, predicate)) {
+                List<Path> notCompressedFiles = pathStream
                         .sorted(pathComparator)
                         .collect(Collectors.toList());
                 int counter = notCompressedFiles.size() - 2;

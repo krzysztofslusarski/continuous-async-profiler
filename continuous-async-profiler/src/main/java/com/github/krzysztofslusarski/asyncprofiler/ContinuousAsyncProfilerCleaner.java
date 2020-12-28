@@ -17,7 +17,10 @@ package com.github.krzysztofslusarski.asyncprofiler;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.stream.Stream;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -47,8 +50,8 @@ class ContinuousAsyncProfilerCleaner implements Runnable {
     }
 
     public void delete(String cleanDir, long cutOffTime) {
-        try {
-            Files.list(Paths.get(cleanDir))
+        try (Stream<Path> list = Files.list(Paths.get(cleanDir))) {
+            list
                     .filter(path -> {
                         try {
                             return Files.isRegularFile(path) && Files.getLastModifiedTime(path).toMillis() < cutOffTime;
