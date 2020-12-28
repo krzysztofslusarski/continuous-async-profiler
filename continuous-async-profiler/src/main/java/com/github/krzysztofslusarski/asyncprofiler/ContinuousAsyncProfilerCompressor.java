@@ -39,23 +39,17 @@ class ContinuousAsyncProfilerCompressor implements Runnable {
     @SuppressWarnings("BusyWait")
     public void run() {
         Path continuousDir = Paths.get(properties.getContinuousOutputDir());
-        BiPredicate<Path, BasicFileAttributes> predicate = (p, basicFileAttributes) -> p.getFileName().toString().endsWith("jfr");
-        Comparator<Path> pathComparator = (o1, o2) -> {
+        BiPredicate<Path, BasicFileAttributes> predicate = (p, ignore) -> p.getFileName().toString().endsWith("jfr");
+        Comparator<Path> oldestFirst = (o1, o2) -> {
             long firstModified = o1.toFile().lastModified();
             long secondModified = o2.toFile().lastModified();
-            if (firstModified > secondModified) {
-                return 1;
-            }
-            if (firstModified < secondModified) {
-                return -1;
-            }
-            return 0;
+            return Long.compare(firstModified, secondModified);
         };
 
         while (!Thread.interrupted()) {
             try (Stream<Path> pathStream = Files.find(continuousDir, 1, predicate)) {
                 List<Path> notCompressedFiles = pathStream
-                        .sorted(pathComparator)
+                        .sorted(oldestFirst)
                         .collect(Collectors.toList());
                 int counter = notCompressedFiles.size() - 2;
                 for (Path source : notCompressedFiles) {
