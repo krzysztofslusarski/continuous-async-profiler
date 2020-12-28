@@ -39,8 +39,7 @@ class ContinuousAsyncProfilerArchiver implements Runnable {
                 Files.find(continuousDir, 1, predicate)
                         .forEach(sourcePath -> {
                             String fileName = sourcePath.getFileName().toString();
-                            String destinationFileName = properties.getArchiveOutputDir() + "/" + fileName;
-                            Path destinationPath = Paths.get(destinationFileName);
+                            Path destinationPath = Paths.get(properties.getArchiveOutputDir(), fileName);
                             if (!destinationPath.toFile().exists()) {
                                 log.info("Archiving: {} to: {}", fileName, destinationPath.toAbsolutePath().toString());
                                 try {
