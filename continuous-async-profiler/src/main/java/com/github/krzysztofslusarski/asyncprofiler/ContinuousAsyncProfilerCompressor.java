@@ -63,7 +63,7 @@ class ContinuousAsyncProfilerCompressor implements Runnable {
                     }
                     Path target = Paths.get(source.toAbsolutePath().toString() + ".gz");
                     compressGzip(source, target);
-                    source.toFile().delete();
+                    Files.delete(source);
                     counter--;
                 }
 
