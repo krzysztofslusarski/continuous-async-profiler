@@ -41,6 +41,7 @@ class ContinuousAsyncProfilerCleaner implements Runnable {
                 Thread.sleep(SleepTime.ONE_HOUR);
             } catch (InterruptedException e) {
                 log.info("Thread interrupted, exiting", e);
+                Thread.currentThread().interrupt();
                 return;
             }
         }
