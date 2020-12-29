@@ -67,17 +67,17 @@ The async-profiler is run **all the time** in **wall-clock mode**. Output from t
 
 ## Configuration properties and defaults
 
-* ```asyncProfiler.continuous.enabled = true``` - if the tool should work or not
-* ```asyncProfiler.continuous.dumpIntervalSeconds = 60``` - time in seconds, how often tool should dump profiler outputs
-* ```asyncProfiler.continuous.continuousOutputsMaxAgeHours = 24``` - time in hours, how long to keep files in the continuous directory
-* ```asyncProfiler.continuous.archiveOutputsMaxAgeDays = 30``` - time in days, how long to keep files in the archive directory
-* ```asyncProfiler.continuous.archiveCopyRegex = .*_13:0.*``` - regex for file name, which files should be copied from the continuous to the archive directory
-* ```asyncProfiler.continuous.event = wall``` - async-profiler event to fetch
-* ```asyncProfiler.continuous.outputDir.continuous = logs/continuous``` - where continuous output should be stored
-* ```asyncProfiler.continuous.outputDir.archive = logs/archive``` - where archive of the outputs should be stored
-* ```asyncProfiler.continuous.stopWorkFile = profiler-stop``` - path to a file, if the file exists then profiler is not running, using this file you can turn
+* ```async-profiler.continuous.enabled = true``` - if the tool should work or not
+* ```async-profiler.continuous.dump-interval = 60``` - time in seconds, how often tool should dump profiler outputs
+* ```async-profiler.continuous.continuous-outputs-max-age-hours = 24``` - time in hours, how long to keep files in the continuous directory
+* ```async-profiler.continuous.archive-outputs-max-age-days = 30``` - time in days, how long to keep files in the archive directory
+* ```async-profiler.continuous.archive-copy-regex = .*_13:0.*``` - regex for file name, which files should be copied from the continuous to the archive directory
+* ```async-profiler.continuous.event = wall``` - async-profiler event to fetch
+* ```async-profiler.continuous.output-dir.continuous = logs/continuous``` - where continuous output should be stored
+* ```async-profiler.continuous.output-dir.archive = logs/archive``` - where archive of the outputs should be stored
+* ```async-profiler.continuous.stop-work-file = profiler-stop``` - path to a file, if the file exists then profiler is not running, using this file you can turn
 on/off profiling at runtime
-* ```asyncProfiler.continuous.profilerLibPath``` - path to ```libasyncProfiler.so```
+* ```asyncProfiler.continuous.profiler-lib-path``` - path to ```libasyncProfiler.so```
 
 ## Troubleshooting
 

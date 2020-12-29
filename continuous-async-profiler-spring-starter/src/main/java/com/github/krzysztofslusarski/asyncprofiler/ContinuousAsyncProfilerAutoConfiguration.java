@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Krzysztof Slusarski
+ * Copyright 2020 Krzysztof Slusarski, Michal Rowicki
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,16 @@
  */
 package com.github.krzysztofslusarski.asyncprofiler;
 
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 
 @Configuration
-@Import(ContinuousAsyncProfilerConfiguration.class)
+@EnableConfigurationProperties(ContinuousAsyncProfilerBootProperties.class)
 public class ContinuousAsyncProfilerAutoConfiguration {
+
+    @Bean
+    ContinuousAsyncProfiler continuousAsyncProfiler(ContinuousAsyncProfilerBootProperties properties) {
+        return new ContinuousAsyncProfiler(properties.toSpringFrameworkProperties());
+    }
 }
