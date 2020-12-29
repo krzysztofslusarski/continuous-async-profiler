@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Krzysztof Slusarski
+ * Copyright 2020 Krzysztof Slusarski, Michal Rowicki
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,22 +15,16 @@
  */
 package com.github.krzysztofslusarski.asyncprofiler;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import javax.annotation.PreDestroy;
 import lombok.extern.slf4j.Slf4j;
-import one.profiler.AsyncProfiler;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.util.StringUtils;
 
 @Slf4j
 @Configuration
 public class ContinuousAsyncProfilerConfiguration {
-    private final List<Thread> threads = new ArrayList<>();
+
+    private final ContinuousAsyncProfilerProperties properties;
 
     public ContinuousAsyncProfilerConfiguration(
             @Value("${asyncProfiler.continuous.enabled:true}") boolean enabled,
@@ -44,7 +38,7 @@ public class ContinuousAsyncProfilerConfiguration {
             @Value("${asyncProfiler.continuous.outputDir.archive:logs/archive}") String outputDirArchive,
             @Value("${asyncProfiler.continuous.outputDir.continuous:logs/continuous}") String outputDirContinuous
     ) {
-        ContinuousAsyncProfilerProperties properties = ContinuousAsyncProfilerProperties.builder()
+        this.properties = ContinuousAsyncProfilerProperties.builder()
                 .enabled(enabled)
                 .event(event)
                 .stopFile(stopFile)
@@ -56,37 +50,10 @@ public class ContinuousAsyncProfilerConfiguration {
                 .archiveOutputDir(outputDirArchive)
                 .profilerLibPath(profilerLibPath)
                 .build();
-
-        log.info("Staring with configuration: {}", properties);
-
-        if (!properties.isEnabled()) {
-            return;
-        }
-
-        createOutputDirectories(properties);
-        AsyncProfiler asyncProfiler = StringUtils.isEmpty(profilerLibPath) ? AsyncProfiler.getInstance() : AsyncProfiler.getInstance(profilerLibPath);
-
-        threads.add(new Thread(new ContinuousAsyncProfilerRunner(asyncProfiler, properties), "cont-prof-runner"));
-        threads.add(new Thread(new ContinuousAsyncProfilerCleaner(properties), "cont-prof-cleaner"));
-        threads.add(new Thread(new ContinuousAsyncProfilerArchiver(properties), "cont-prof-arch"));
-        threads.add(new Thread(new ContinuousAsyncProfilerCompressor(properties), "cont-prof-gzip"));
-        log.info("Starting continuous profiling threads");
-        threads.forEach(Thread::start);
     }
 
-    @PreDestroy
-    void shutdown() {
-        log.info("Spring context destroyed, shutting down threads");
-        threads.forEach(Thread::interrupt);
-    }
-
-    private void createOutputDirectories(ContinuousAsyncProfilerProperties properties) {
-        try {
-            log.debug("Checking if output dirs exist");
-            Files.createDirectories(Paths.get(properties.getArchiveOutputDir()));
-            Files.createDirectories(Paths.get(properties.getContinuousOutputDir()));
-        } catch (IOException e) {
-            throw new IllegalStateException("Cannot create output dirs", e);
-        }
+    @Bean
+    ContinuousAsyncProfiler continuousAsyncProfiler() {
+        return new ContinuousAsyncProfiler(properties);
     }
 }

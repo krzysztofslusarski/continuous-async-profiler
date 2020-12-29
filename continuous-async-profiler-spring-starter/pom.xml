@@ -9,11 +9,27 @@
 
     <artifactId>continuous-async-profiler-spring-starter</artifactId>
 
+    <properties>
+        <spring-boot.version>1.5.22.RELEASE</spring-boot.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>continuous-async-profiler</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <version>${spring-boot.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot</artifactId>
+            <version>${spring-boot.version}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>
