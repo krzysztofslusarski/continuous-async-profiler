@@ -27,16 +27,16 @@ public class ContinuousAsyncProfilerConfiguration {
     private final ContinuousAsyncProfilerProperties properties;
 
     public ContinuousAsyncProfilerConfiguration(
-            @Value("${asyncProfiler.continuous.enabled:true}") boolean enabled,
-            @Value("${asyncProfiler.continuous.dumpIntervalSeconds:60}") int dumpIntervalSeconds,
-            @Value("${asyncProfiler.continuous.continuousOutputsMaxAgeHours:24}") int continuousOutputsMaxAgeHours,
-            @Value("${asyncProfiler.continuous.archiveOutputsMaxAgeDays:30}") int archiveOutputsMaxAgeDays,
-            @Value("${asyncProfiler.continuous.archiveCopyRegex:.*_13:0.*}") String archiveCopyRegex,
-            @Value("${asyncProfiler.continuous.event:wall}") String event,
-            @Value("${asyncProfiler.continuous.profilerLibPath:}") String profilerLibPath,
-            @Value("${asyncProfiler.continuous.stopWorkFile:profiler-stop}") String stopFile,
-            @Value("${asyncProfiler.continuous.outputDir.archive:logs/archive}") String outputDirArchive,
-            @Value("${asyncProfiler.continuous.outputDir.continuous:logs/continuous}") String outputDirContinuous
+            @Value("${async-profiler.continuous.enabled:true}") boolean enabled,
+            @Value("${async-profiler.continuous.dump-interval:60}") int dumpIntervalSeconds,
+            @Value("${async-profiler.continuous.continuous-outputs-max-age-hours:24}") int continuousOutputsMaxAgeHours,
+            @Value("${async-profiler.continuous.archive-outputs-max-age-days:30}") int archiveOutputsMaxAgeDays,
+            @Value("${async-profiler.continuous.archive-copy-regex:.*_13:0.*}") String archiveCopyRegex,
+            @Value("${async-profiler.continuous.event:wall}") String event,
+            @Value("${async-profiler.continuous.profiler-lib-path:}") String profilerLibPath,
+            @Value("${async-profiler.continuous.stop-work-file:profiler-stop}") String stopFile,
+            @Value("${async-profiler.continuous.output-dir.archive:logs/archive}") String outputDirArchive,
+            @Value("${async-profiler.continuous.output-dir.continuous:logs/continuous}") String outputDirContinuous
     ) {
         this.properties = ContinuousAsyncProfilerProperties.builder()
                 .enabled(enabled)
