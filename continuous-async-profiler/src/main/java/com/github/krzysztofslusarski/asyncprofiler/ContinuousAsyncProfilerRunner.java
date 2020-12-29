@@ -32,38 +32,29 @@ class ContinuousAsyncProfilerRunner implements Runnable {
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss");
 
     @Override
-    @SuppressWarnings("BusyWait")
     public void run() {
         boolean started = false;
         String params = null;
-        while (!Thread.interrupted()) {
-            try {
-                if (stopFileExists()) {
-                    log.info("Stop file exists on filesystem: {}, will not run profiler and go to sleep for 10 minutes", properties.getStopFile());
-                    Thread.sleep(SleepTime.TEN_MINUTES);
-                } else {
-                    log.info("Starting async-profiler");
-                    params = createParams();
-                    asyncProfiler.execute("start," + params);
-                    started = true;
-                    Thread.sleep(properties.dumpIntervalMilliseconds());
-                    log.info("Stopping async-profiler");
+        try {
+            if (stopFileExists()) {
+                log.info("Stop file exists on filesystem: {}, will not run profiler", properties.getStopFile());
+            } else {
+                log.info("Starting async-profiler");
+                params = createParams();
+                asyncProfiler.execute("start," + params);
+                started = true;
+                log.info("Stopping async-profiler");
+                asyncProfiler.execute("stop," + params);
+                started = false;
+            }
+        } catch (IOException e) {
+            log.error("Cannot run profiler", e);
+        } finally {
+            if (started) {
+                try {
                     asyncProfiler.execute("stop," + params);
-                    started = false;
-                }
-            } catch (IOException e) {
-                log.error("Cannot run profiler", e);
-            } catch (InterruptedException e) {
-                log.info("Thread interrupted, exiting", e);
-                Thread.currentThread().interrupt();
-                return;
-            } finally {
-                if (started) {
-                    try {
-                        asyncProfiler.execute("stop," + params);
-                    } catch (IOException e) {
-                        log.error("Cannot stop profiler at finally", e);
-                    }
+                } catch (IOException e) {
+                    log.error("Cannot stop profiler at finally", e);
                 }
             }
         }
