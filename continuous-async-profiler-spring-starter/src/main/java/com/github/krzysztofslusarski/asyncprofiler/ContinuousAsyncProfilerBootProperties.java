@@ -15,12 +15,12 @@
  */
 package com.github.krzysztofslusarski.asyncprofiler;
 
-import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.regex.Pattern;
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Data
 @ConfigurationProperties("async-profiler.continuous")
@@ -83,8 +83,8 @@ class ContinuousAsyncProfilerBootProperties {
                 .continuousOutputsMaxAgeHours(continuousOutputsMaxAgeHours == null ? 24 : (int) continuousOutputsMaxAgeHours.toHours())
                 .archiveOutputsMaxAgeDays(archiveOutputsMaxAgeDays == null ? 30 : (int) archiveOutputsMaxAgeDays.toDays())
                 .archiveCopyRegex(archiveCopyRegex == null ? ".*_13:0.*" : archiveCopyRegex.pattern())
-                .continuousOutputDir(outputDir.continuous == null ? "logs/continuous" : outputDir.continuous.toString())
-                .archiveOutputDir(outputDir.archive == null ? "logs/archive" : outputDir.archive.toString())
+                .continuousOutputDir(outputDir == null || outputDir.continuous == null ? "logs/continuous" : outputDir.continuous.toString())
+                .archiveOutputDir(outputDir == null || outputDir.archive == null ? "logs/archive" : outputDir.archive.toString())
                 .profilerLibPath(profilerLibPath == null ? "" : profilerLibPath.toString())
                 .build();
     }
