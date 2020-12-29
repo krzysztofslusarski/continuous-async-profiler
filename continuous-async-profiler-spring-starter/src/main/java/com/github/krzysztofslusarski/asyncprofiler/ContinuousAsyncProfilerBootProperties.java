@@ -77,15 +77,15 @@ class ContinuousAsyncProfilerBootProperties {
     public ContinuousAsyncProfilerProperties toSpringFrameworkProperties() {
         return ContinuousAsyncProfilerProperties.builder()
                 .enabled(enabled)
-                .event(event)
-                .stopFile(stopWorkFile.toString())
-                .dumpIntervalSeconds((int) dumpInterval.getSeconds())
-                .continuousOutputsMaxAgeHours((int) continuousOutputsMaxAgeHours.toHours())
-                .archiveOutputsMaxAgeDays((int) archiveOutputsMaxAgeDays.toDays())
-                .archiveCopyRegex(archiveCopyRegex.pattern())
-                .continuousOutputDir(outputDir.continuous.toString())
-                .archiveOutputDir(outputDir.archive.toString())
-                .profilerLibPath(profilerLibPath.toString())
+                .event(event == null || event.isEmpty() ? "wall" : event)
+                .stopFile(stopWorkFile == null ? "profiler-stop" : stopWorkFile.toString())
+                .dumpIntervalSeconds(dumpInterval == null ? 60 : (int)dumpInterval.getSeconds())
+                .continuousOutputsMaxAgeHours(continuousOutputsMaxAgeHours == null ? 24 : (int) continuousOutputsMaxAgeHours.toHours())
+                .archiveOutputsMaxAgeDays(archiveOutputsMaxAgeDays == null ? 30 : (int) archiveOutputsMaxAgeDays.toDays())
+                .archiveCopyRegex(archiveCopyRegex == null ? ".*_13:0.*" : archiveCopyRegex.pattern())
+                .continuousOutputDir(outputDir.continuous == null ? "logs/continuous" : outputDir.continuous.toString())
+                .archiveOutputDir(outputDir.archive == null ? "logs/archive" : outputDir.archive.toString())
+                .profilerLibPath(profilerLibPath == null ? "" : profilerLibPath.toString())
                 .build();
     }
 }
