@@ -18,6 +18,9 @@ package com.github.krzysztofslusarski.asyncprofiler;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import javax.annotation.PreDestroy;
 import lombok.extern.slf4j.Slf4j;
 import one.profiler.AsyncProfiler;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,6 +30,8 @@ import org.springframework.util.StringUtils;
 @Slf4j
 @Configuration
 public class ContinuousAsyncProfilerConfiguration {
+    private final List<Thread> threads = new ArrayList<>();
+
     public ContinuousAsyncProfilerConfiguration(
             @Value("${asyncProfiler.continuous.enabled:true}") boolean enabled,
             @Value("${asyncProfiler.continuous.dumpIntervalSeconds:60}") int dumpIntervalSeconds,
@@ -59,13 +64,20 @@ public class ContinuousAsyncProfilerConfiguration {
         }
 
         createOutputDirectories(properties);
-
         AsyncProfiler asyncProfiler = StringUtils.isEmpty(profilerLibPath) ? AsyncProfiler.getInstance() : AsyncProfiler.getInstance(profilerLibPath);
 
-        new Thread(new ContinuousAsyncProfilerRunner(asyncProfiler, properties), "cont-prof-runner").start();
-        new Thread(new ContinuousAsyncProfilerCleaner(properties), "cont-prof-cleaner").start();
-        new Thread(new ContinuousAsyncProfilerArchiver(properties), "cont-prof-arch").start();
-        new Thread(new ContinuousAsyncProfilerCompressor(properties), "cont-prof-gzip").start();
+        threads.add(new Thread(new ContinuousAsyncProfilerRunner(asyncProfiler, properties), "cont-prof-runner"));
+        threads.add(new Thread(new ContinuousAsyncProfilerCleaner(properties), "cont-prof-cleaner"));
+        threads.add(new Thread(new ContinuousAsyncProfilerArchiver(properties), "cont-prof-arch"));
+        threads.add(new Thread(new ContinuousAsyncProfilerCompressor(properties), "cont-prof-gzip"));
+        log.info("Starting continuous profiling threads");
+        threads.forEach(Thread::start);
+    }
+
+    @PreDestroy
+    void shutdown() {
+        log.info("Spring context destroyed, shutting down threads");
+        threads.forEach(Thread::interrupt);
     }
 
     private void createOutputDirectories(ContinuousAsyncProfilerProperties properties) {
