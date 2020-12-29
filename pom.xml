@@ -24,6 +24,7 @@
         <maven-scm-provider-gitexe.version>1.9.4</maven-scm-provider-gitexe.version>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
+        <src.dir>src/main/java</src.dir>
     </properties>
 
     <dependencies>
@@ -97,7 +98,7 @@
     </issueManagement>
 
     <build>
-        <sourceDirectory>target/generated-sources/delombok</sourceDirectory>
+        <sourceDirectory>${src.dir}</sourceDirectory>
 
         <plugins>
             <plugin>
@@ -174,6 +175,13 @@
     </build>
 
     <profiles>
+        <profile>
+            <id>delombok</id>
+            <properties>
+                <src.dir>${project.build.directory}/generated-sources/delombok</src.dir>
+            </properties>
+        </profile>
+
         <profile>
             <id>release-sign-artifacts</id>
             <activation>
