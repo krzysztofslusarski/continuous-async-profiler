@@ -32,8 +32,4 @@ class ContinuousAsyncProfilerProperties {
     int continuousOutputsMaxAgeHours;
     int archiveOutputsMaxAgeDays;
     Pattern compiledArchiveCopyRegex;
-
-    long dumpIntervalMilliseconds() {
-        return dumpIntervalSeconds * 1000L;
-    }
 }

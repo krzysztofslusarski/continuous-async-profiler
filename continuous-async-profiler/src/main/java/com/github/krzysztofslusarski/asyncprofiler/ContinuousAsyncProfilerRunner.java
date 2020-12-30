@@ -32,10 +32,10 @@ class ContinuousAsyncProfilerRunner implements Runnable {
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss");
 
     private boolean started = false;
+    private String params = null;
 
     @Override
     public void run() {
-        String params = null;
         try {
             if (started) {
                 log.info("Stopping async-profiler");
