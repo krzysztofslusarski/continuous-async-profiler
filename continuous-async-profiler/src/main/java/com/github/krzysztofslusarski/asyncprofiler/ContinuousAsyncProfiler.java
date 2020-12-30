@@ -15,25 +15,34 @@
  */
 package com.github.krzysztofslusarski.asyncprofiler;
 
-import lombok.extern.slf4j.Slf4j;
-import one.profiler.AsyncProfiler;
-import org.springframework.beans.factory.DisposableBean;
-import org.springframework.util.StringUtils;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
+import lombok.extern.slf4j.Slf4j;
+import one.profiler.AsyncProfiler;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.util.StringUtils;
 
 @Slf4j
 public class ContinuousAsyncProfiler implements DisposableBean {
-
-    private final List<Thread> threads = new ArrayList<>();
+    private final List<ScheduledFuture<?>> scheduledFutures = new ArrayList<>();
+    private final ThreadFactory threadFactory = new ContinuousAsyncProfilerThreadFactory();
+    private final ScheduledExecutorService mainExecutorService = new ScheduledThreadPoolExecutor(1, threadFactory);
+    private final ScheduledExecutorService helperExecutorService = new ScheduledThreadPoolExecutor(1, threadFactory);
+    private final ContinuousAsyncProfilerRunner profilerRunner;
 
     public ContinuousAsyncProfiler(ContinuousAsyncProfilerProperties properties) {
         log.info("Staring with configuration: {}", properties);
 
         if (!properties.isEnabled()) {
+            profilerRunner = null;
             return;
         }
 
@@ -41,12 +50,20 @@ public class ContinuousAsyncProfiler implements DisposableBean {
         AsyncProfiler asyncProfiler = StringUtils.isEmpty(properties.getProfilerLibPath()) ?
                 AsyncProfiler.getInstance() : AsyncProfiler.getInstance(properties.getProfilerLibPath());
 
-        threads.add(new Thread(new ContinuousAsyncProfilerRunner(asyncProfiler, properties), "cont-prof-runner"));
-        threads.add(new Thread(new ContinuousAsyncProfilerCleaner(properties), "cont-prof-cleaner"));
-        threads.add(new Thread(new ContinuousAsyncProfilerArchiver(properties), "cont-prof-arch"));
-        threads.add(new Thread(new ContinuousAsyncProfilerCompressor(properties), "cont-prof-gzip"));
         log.info("Starting continuous profiling threads");
-        threads.forEach(Thread::start);
+        profilerRunner = new ContinuousAsyncProfilerRunner(asyncProfiler, properties);
+        scheduledFutures.add(mainExecutorService.scheduleAtFixedRate(
+                profilerRunner, 0, properties.getDumpIntervalSeconds(), TimeUnit.SECONDS
+        ));
+        scheduledFutures.add(helperExecutorService.scheduleAtFixedRate(
+                new ContinuousAsyncProfilerCleaner(properties), 0, 1, TimeUnit.HOURS
+        ));
+        scheduledFutures.add(helperExecutorService.scheduleAtFixedRate(
+                new ContinuousAsyncProfilerArchiver(properties), 0, 1, TimeUnit.DAYS
+        ));
+        scheduledFutures.add(helperExecutorService.scheduleAtFixedRate(
+                new ContinuousAsyncProfilerCompressor(properties), 0, 10, TimeUnit.MINUTES
+        ));
     }
 
     private void createOutputDirectories(ContinuousAsyncProfilerProperties properties) {
@@ -62,6 +79,9 @@ public class ContinuousAsyncProfiler implements DisposableBean {
     @Override
     public void destroy() {
         log.info("Spring context destroyed, shutting down threads");
-        threads.forEach(Thread::interrupt);
+        mainExecutorService.shutdown();
+        helperExecutorService.shutdown();
+        scheduledFutures.forEach(scheduledFuture -> scheduledFuture.cancel(false));
+        profilerRunner.shutdown();
     }
 }

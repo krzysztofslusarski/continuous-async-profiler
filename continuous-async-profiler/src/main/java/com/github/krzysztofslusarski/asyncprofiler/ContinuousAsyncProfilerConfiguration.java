@@ -15,6 +15,7 @@
  */
 package com.github.krzysztofslusarski.asyncprofiler;
 
+import java.util.regex.Pattern;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -45,7 +46,7 @@ public class ContinuousAsyncProfilerConfiguration {
                 .dumpIntervalSeconds(dumpIntervalSeconds)
                 .continuousOutputsMaxAgeHours(continuousOutputsMaxAgeHours)
                 .archiveOutputsMaxAgeDays(archiveOutputsMaxAgeDays)
-                .archiveCopyRegex(archiveCopyRegex)
+                .compiledArchiveCopyRegex(Pattern.compile(archiveCopyRegex))
                 .continuousOutputDir(outputDirContinuous)
                 .archiveOutputDir(outputDirArchive)
                 .profilerLibPath(profilerLibPath)

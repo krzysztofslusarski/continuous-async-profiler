@@ -27,49 +27,43 @@ import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.GZIPOutputStream;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@RequiredArgsConstructor
 class ContinuousAsyncProfilerCompressor implements Runnable {
-    private final ContinuousAsyncProfilerProperties properties;
+    private final Path continuousDir;
+    private final BiPredicate<Path, BasicFileAttributes> predicate;
+    private final Comparator<Path> oldestFirst;
 
-    @Override
-    @SuppressWarnings("BusyWait")
-    public void run() {
-        Path continuousDir = Paths.get(properties.getContinuousOutputDir());
-        BiPredicate<Path, BasicFileAttributes> predicate = (p, ignore) -> p.getFileName().toString().endsWith("jfr");
-        Comparator<Path> oldestFirst = (o1, o2) -> {
+    public ContinuousAsyncProfilerCompressor(ContinuousAsyncProfilerProperties properties) {
+        this.continuousDir = Paths.get(properties.getContinuousOutputDir());
+        this.predicate = (p, ignore) -> p.getFileName().toString().endsWith("jfr");
+        this.oldestFirst = (o1, o2) -> {
             long firstModified = o1.toFile().lastModified();
             long secondModified = o2.toFile().lastModified();
             return Long.compare(firstModified, secondModified);
         };
+    }
 
-        while (!Thread.interrupted()) {
-            try (Stream<Path> pathStream = Files.find(continuousDir, 1, predicate)) {
-                List<Path> notCompressedFiles = pathStream
-                        .sorted(oldestFirst)
-                        .collect(Collectors.toList());
-                int counter = notCompressedFiles.size() - 2;
-                for (Path source : notCompressedFiles) {
-                    if (counter <= 0) {
-                        break;
-                    }
-                    Path target = Paths.get(source.toAbsolutePath().toString() + ".gz");
-                    compressGzip(source, target);
-                    Files.delete(source);
-                    counter--;
+    @Override
+    public void run() {
+        try (Stream<Path> pathStream = Files.find(continuousDir, 1, predicate)) {
+            List<Path> notCompressedFiles = pathStream
+                    .sorted(oldestFirst)
+                    .collect(Collectors.toList());
+            int counter = notCompressedFiles.size() - 2;
+            for (Path source : notCompressedFiles) {
+                if (counter <= 0) {
+                    break;
                 }
-
-                Thread.sleep(SleepTime.TEN_MINUTES);
-            } catch (InterruptedException e) {
-                log.info("Thread interrupted, exiting", e);
-                Thread.currentThread().interrupt();
-                return;
-            } catch (IOException e) {
-                log.error("Some IO failed", e);
+                Path target = Paths.get(source.toAbsolutePath().toString() + ".gz");
+                log.info("Compressing: {}", source);
+                compressGzip(source, target);
+                Files.delete(source);
+                counter--;
             }
+        } catch (IOException e) {
+            log.error("Some IO failed", e);
         }
     }
 

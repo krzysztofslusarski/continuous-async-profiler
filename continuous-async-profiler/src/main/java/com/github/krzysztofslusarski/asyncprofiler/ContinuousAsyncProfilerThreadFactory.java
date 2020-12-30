@@ -15,25 +15,14 @@
  */
 package com.github.krzysztofslusarski.asyncprofiler;
 
-import java.util.regex.Pattern;
-import lombok.Builder;
-import lombok.Value;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicInteger;
 
-@Value
-@Builder
-class ContinuousAsyncProfilerProperties {
-    boolean enabled;
-    String profilerLibPath;
-    String event;
-    String stopFile;
-    String continuousOutputDir;
-    String archiveOutputDir;
-    int dumpIntervalSeconds;
-    int continuousOutputsMaxAgeHours;
-    int archiveOutputsMaxAgeDays;
-    Pattern compiledArchiveCopyRegex;
+class ContinuousAsyncProfilerThreadFactory implements ThreadFactory {
+    private final AtomicInteger counter = new AtomicInteger();
 
-    long dumpIntervalMilliseconds() {
-        return dumpIntervalSeconds * 1000L;
+    @Override
+    public Thread newThread(Runnable r) {
+        return new Thread(r, "cont-prof-" + counter.incrementAndGet());
     }
 }
