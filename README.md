@@ -22,7 +22,7 @@ Next you need to copy ```libasyncProfiler.so``` file to any of ```java.library.p
 If you want to use the other path to  ```libasyncProfiler.so``` you can do it with spring application properties/yaml/... For example:
 
 ```properties
-asyncProfiler.continuous.profilerLibPath=/path/to/libasyncProfiler.so
+async-profiler.continuous.profiler-lib-path=/path/to/libasyncProfiler.so
 ```
 
 ## How to add use it in spring boot application?
@@ -77,7 +77,7 @@ The async-profiler is run **all the time** in **wall-clock mode**. Output from t
 * ```async-profiler.continuous.output-dir.archive = logs/archive``` - where archive of the outputs should be stored
 * ```async-profiler.continuous.stop-work-file = profiler-stop``` - path to a file, if the file exists then profiler is not running, using this file you can turn
 on/off profiling at runtime
-* ```asyncProfiler.continuous.profiler-lib-path``` - path to ```libasyncProfiler.so```
+* ```async-profiler.continuous.profiler-lib-path``` - path to ```libasyncProfiler.so```
 
 ## Troubleshooting
 
