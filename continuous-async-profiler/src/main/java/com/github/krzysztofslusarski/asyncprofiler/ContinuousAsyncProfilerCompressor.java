@@ -31,13 +31,11 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 class ContinuousAsyncProfilerCompressor implements Runnable {
-    private final ContinuousAsyncProfilerProperties properties;
     private final Path continuousDir;
     private final BiPredicate<Path, BasicFileAttributes> predicate;
     private final Comparator<Path> oldestFirst;
 
     public ContinuousAsyncProfilerCompressor(ContinuousAsyncProfilerProperties properties) {
-        this.properties = properties;
         this.continuousDir = Paths.get(properties.getContinuousOutputDir());
         this.predicate = (p, ignore) -> p.getFileName().toString().endsWith("jfr");
         this.oldestFirst = (o1, o2) -> {
