@@ -1,5 +1,5 @@
 # continuous-async-profiler
-This is a spring boot library that runs async-profiler in continuous mode.
+This is a spring boot library that runs async-profiler in the continuous mode.
 
 ## Third party software needed
 
@@ -33,7 +33,7 @@ You just need to add dependency to your spring boot application
 <dependency>
     <groupId>com.github.krzysztofslusarski</groupId>
     <artifactId>continuous-async-profiler-spring-starter</artifactId>
-    <version>1.1</version>
+    <version>1.2</version>
 </dependency>
 ```
 
@@ -47,7 +47,7 @@ with a proper version.
 <dependency>
     <groupId>com.github.krzysztofslusarski</groupId>
     <artifactId>continuous-async-profiler</artifactId>
-    <version>1.1</version>
+    <version>1.2</version>
 </dependency>
 ```
 
