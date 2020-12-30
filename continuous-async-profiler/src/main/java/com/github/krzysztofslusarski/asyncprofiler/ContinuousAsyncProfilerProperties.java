@@ -15,6 +15,7 @@
  */
 package com.github.krzysztofslusarski.asyncprofiler;
 
+import java.util.regex.Pattern;
 import lombok.Builder;
 import lombok.Value;
 
@@ -30,7 +31,7 @@ class ContinuousAsyncProfilerProperties {
     int dumpIntervalSeconds;
     int continuousOutputsMaxAgeHours;
     int archiveOutputsMaxAgeDays;
-    String archiveCopyRegex;
+    Pattern compiledArchiveCopyRegex;
 
     long dumpIntervalMilliseconds() {
         return dumpIntervalSeconds * 1000L;

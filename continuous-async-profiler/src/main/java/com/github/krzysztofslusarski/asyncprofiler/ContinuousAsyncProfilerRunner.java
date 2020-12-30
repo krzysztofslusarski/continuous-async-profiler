@@ -31,11 +31,18 @@ class ContinuousAsyncProfilerRunner implements Runnable {
 
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss");
 
+    private boolean started = false;
+
     @Override
     public void run() {
-        boolean started = false;
         String params = null;
         try {
+            if (started) {
+                log.info("Stopping async-profiler");
+                asyncProfiler.execute("stop," + params);
+                started = false;
+            }
+
             if (stopFileExists()) {
                 log.info("Stop file exists on filesystem: {}, will not run profiler", properties.getStopFile());
             } else {
@@ -43,21 +50,22 @@ class ContinuousAsyncProfilerRunner implements Runnable {
                 params = createParams();
                 asyncProfiler.execute("start," + params);
                 started = true;
-                log.info("Stopping async-profiler");
-                asyncProfiler.execute("stop," + params);
-                started = false;
             }
         } catch (IOException e) {
             log.error("Cannot run profiler", e);
-        } finally {
             if (started) {
                 try {
                     asyncProfiler.execute("stop," + params);
-                } catch (IOException e) {
-                    log.error("Cannot stop profiler at finally", e);
+                } catch (IOException e2) {
+                    log.error("Cannot stop profiler after first exception", e2);
                 }
             }
         }
+    }
+
+    void shutdown() {
+        log.info("Shutting down");
+        asyncProfiler.stop();
     }
 
     private boolean stopFileExists() {

@@ -82,7 +82,7 @@ class ContinuousAsyncProfilerBootProperties {
                 .dumpIntervalSeconds(dumpInterval == null ? 60 : (int)dumpInterval.getSeconds())
                 .continuousOutputsMaxAgeHours(continuousOutputsMaxAgeHours == null ? 24 : (int) continuousOutputsMaxAgeHours.toHours())
                 .archiveOutputsMaxAgeDays(archiveOutputsMaxAgeDays == null ? 30 : (int) archiveOutputsMaxAgeDays.toDays())
-                .archiveCopyRegex(archiveCopyRegex == null ? ".*_13:0.*" : archiveCopyRegex.pattern())
+                .compiledArchiveCopyRegex(Pattern.compile(archiveCopyRegex == null ? ".*_13:0.*" : archiveCopyRegex.pattern()))
                 .continuousOutputDir(outputDir == null || outputDir.continuous == null ? "logs/continuous" : outputDir.continuous.toString())
                 .archiveOutputDir(outputDir == null || outputDir.archive == null ? "logs/archive" : outputDir.archive.toString())
                 .profilerLibPath(profilerLibPath == null ? "" : profilerLibPath.toString())

@@ -21,7 +21,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.function.BiPredicate;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,8 +33,7 @@ class ContinuousAsyncProfilerArchiver implements Runnable {
     public ContinuousAsyncProfilerArchiver(ContinuousAsyncProfilerProperties properties) {
         this.properties = properties;
         this.continuousDir = Paths.get(properties.getContinuousOutputDir());
-        Pattern compiledPattern = Pattern.compile(properties.getArchiveCopyRegex());
-        this.predicate = (p, ignore) -> compiledPattern.matcher(p.getFileName().toString()).matches() && Files.isRegularFile(p);
+        this.predicate = (p, ignore) -> properties.getCompiledArchiveCopyRegex().matcher(p.getFileName().toString()).matches() && Files.isRegularFile(p);
     }
 
     @Override

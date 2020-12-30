@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 import one.profiler.AsyncProfiler;
@@ -32,12 +33,16 @@ import org.springframework.util.StringUtils;
 @Slf4j
 public class ContinuousAsyncProfiler implements DisposableBean {
     private final List<ScheduledFuture<?>> scheduledFutures = new ArrayList<>();
-    private final ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(4);
+    private final ThreadFactory threadFactory = new ContinuousAsyncProfilerThreadFactory();
+    private final ScheduledExecutorService mainExecutorService = new ScheduledThreadPoolExecutor(1, threadFactory);
+    private final ScheduledExecutorService helperExecutorService = new ScheduledThreadPoolExecutor(1, threadFactory);
+    private final ContinuousAsyncProfilerRunner profilerRunner;
 
     public ContinuousAsyncProfiler(ContinuousAsyncProfilerProperties properties) {
         log.info("Staring with configuration: {}", properties);
 
         if (!properties.isEnabled()) {
+            profilerRunner = null;
             return;
         }
 
@@ -46,16 +51,17 @@ public class ContinuousAsyncProfiler implements DisposableBean {
                 AsyncProfiler.getInstance() : AsyncProfiler.getInstance(properties.getProfilerLibPath());
 
         log.info("Starting continuous profiling threads");
-        scheduledFutures.add(executorService.scheduleAtFixedRate(
-                new ContinuousAsyncProfilerRunner(asyncProfiler, properties), 0, properties.getDumpIntervalSeconds(), TimeUnit.SECONDS
+        profilerRunner = new ContinuousAsyncProfilerRunner(asyncProfiler, properties);
+        scheduledFutures.add(mainExecutorService.scheduleAtFixedRate(
+                profilerRunner, 0, properties.getDumpIntervalSeconds(), TimeUnit.SECONDS
         ));
-        scheduledFutures.add(executorService.scheduleAtFixedRate(
+        scheduledFutures.add(helperExecutorService.scheduleAtFixedRate(
                 new ContinuousAsyncProfilerCleaner(properties), 0, 1, TimeUnit.HOURS
         ));
-        scheduledFutures.add(executorService.scheduleAtFixedRate(
+        scheduledFutures.add(helperExecutorService.scheduleAtFixedRate(
                 new ContinuousAsyncProfilerArchiver(properties), 0, 1, TimeUnit.DAYS
         ));
-        scheduledFutures.add(executorService.scheduleAtFixedRate(
+        scheduledFutures.add(helperExecutorService.scheduleAtFixedRate(
                 new ContinuousAsyncProfilerCompressor(properties), 0, 10, TimeUnit.MINUTES
         ));
     }
@@ -73,6 +79,9 @@ public class ContinuousAsyncProfiler implements DisposableBean {
     @Override
     public void destroy() {
         log.info("Spring context destroyed, shutting down threads");
-        scheduledFutures.forEach(scheduledFuture -> scheduledFuture.cancel(true));
+        mainExecutorService.shutdown();
+        helperExecutorService.shutdown();
+        scheduledFutures.forEach(scheduledFuture -> scheduledFuture.cancel(false));
+        profilerRunner.shutdown();
     }
 }
