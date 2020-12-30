@@ -4,7 +4,7 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
 class ContinuousAsyncProfilerThreadFactory implements ThreadFactory {
-    private AtomicInteger counter;
+    private final AtomicInteger counter = new AtomicInteger();
 
     @Override
     public Thread newThread(Runnable r) {
