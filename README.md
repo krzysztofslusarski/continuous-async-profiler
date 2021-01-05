@@ -68,9 +68,9 @@ The async-profiler is run **all the time** in **wall-clock mode**. Output from t
 ## Configuration properties and defaults
 
 * ```async-profiler.continuous.enabled = true``` - if the tool should work or not
-* ```async-profiler.continuous.dump-interval = 60``` - time in seconds, how often tool should dump profiler outputs
-* ```async-profiler.continuous.continuous-outputs-max-age-hours = 24``` - time in hours, how long to keep files in the continuous directory
-* ```async-profiler.continuous.archive-outputs-max-age-days = 30``` - time in days, how long to keep files in the archive directory
+* ```async-profiler.continuous.dump-interval = 60s``` - time in seconds, how often tool should dump profiler outputs
+* ```async-profiler.continuous.continuous-outputs-max-age-hours = 24h``` - time in hours, how long to keep files in the continuous directory
+* ```async-profiler.continuous.archive-outputs-max-age-days = 30d``` - time in days, how long to keep files in the archive directory
 * ```async-profiler.continuous.archive-copy-regex = .*_13:0.*``` - regex for file name, which files should be copied from the continuous to the archive directory
 * ```async-profiler.continuous.event = wall``` - async-profiler event to fetch
 * ```async-profiler.continuous.output-dir.continuous = logs/continuous``` - where continuous output should be stored
