@@ -58,6 +58,11 @@
             <version>${slf4j.version}</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>tools.profiler</groupId>
+            <artifactId>async-profiler</artifactId>
+            <version>1.8.3</version>
+        </dependency>
     </dependencies>
 
     <licenses>
