@@ -82,6 +82,8 @@ public class ContinuousAsyncProfiler implements DisposableBean {
         mainExecutorService.shutdown();
         helperExecutorService.shutdown();
         scheduledFutures.forEach(scheduledFuture -> scheduledFuture.cancel(false));
-        profilerRunner.shutdown();
+        if (profilerRunner != null) {
+            profilerRunner.shutdown();
+        }
     }
 }
