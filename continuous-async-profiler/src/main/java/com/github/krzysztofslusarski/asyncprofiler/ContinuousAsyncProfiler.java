@@ -38,7 +38,7 @@ public class ContinuousAsyncProfiler implements DisposableBean {
     private final ScheduledExecutorService helperExecutorService = new ScheduledThreadPoolExecutor(1, threadFactory);
     private final ContinuousAsyncProfilerRunner profilerRunner;
 
-    public ContinuousAsyncProfiler(ContinuousAsyncProfilerProperties properties) {
+    public ContinuousAsyncProfiler(ContinuousAsyncProfilerProperties properties, ContinuousAsyncProfilerMBeanPropertiesService mBeanPropertiesService) {
         log.info("Staring with configuration: {}", properties);
 
         if (!properties.isEnabled()) {
@@ -51,7 +51,7 @@ public class ContinuousAsyncProfiler implements DisposableBean {
                 AsyncProfiler.getInstance() : AsyncProfiler.getInstance(properties.getProfilerLibPath());
 
         log.info("Starting continuous profiling threads");
-        profilerRunner = new ContinuousAsyncProfilerRunner(asyncProfiler, properties);
+        profilerRunner = new ContinuousAsyncProfilerRunner(asyncProfiler, properties, mBeanPropertiesService);
         scheduledFutures.add(mainExecutorService.scheduleAtFixedRate(
                 profilerRunner, 0, properties.getDumpIntervalSeconds(), TimeUnit.SECONDS
         ));

@@ -28,6 +28,7 @@ import one.profiler.AsyncProfiler;
 class ContinuousAsyncProfilerRunner implements Runnable {
     private final AsyncProfiler asyncProfiler;
     private final ContinuousAsyncProfilerProperties properties;
+    private final ContinuousAsyncProfilerMBeanPropertiesService mBeanPropertiesService;
 
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss");
 
@@ -45,6 +46,8 @@ class ContinuousAsyncProfilerRunner implements Runnable {
 
             if (stopFileExists()) {
                 log.info("Stop file exists on filesystem: {}, will not run profiler", properties.getStopFile());
+            } else if (disabledByMbean()) {
+                log.info("Profiler stopped by MBean, will not run profiler");
             } else {
                 log.info("Starting async-profiler");
                 params = createParams();
@@ -72,12 +75,22 @@ class ContinuousAsyncProfilerRunner implements Runnable {
         return Paths.get(properties.getStopFile()).toFile().exists();
     }
 
+    private boolean disabledByMbean() {
+        return mBeanPropertiesService.getProperties().isDisableProfiler();
+    }
+
     private String createParams() {
         String date = formatter.format(LocalDateTime.now());
+        String event = mBeanPropertiesService.getProperties().getOverriddenEvent();
+        if (event == null) {
+            event = properties.getEvent();
+        }
+
         return String.format(
-                "jfr,event=%s,file=%s/%s.jfr",
-                properties.getEvent(),
+                "jfr,event=%s,file=%s/%s-%s.jfr",
+                event,
                 properties.getContinuousOutputDir(),
+                event,
                 date
         );
     }

@@ -20,9 +20,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 @Slf4j
 @Configuration
+@Import(ContinuousAsyncProfilerMBeanConfiguration.class)
 public class ContinuousAsyncProfilerConfiguration {
 
     private final ContinuousAsyncProfilerProperties properties;
@@ -54,7 +56,7 @@ public class ContinuousAsyncProfilerConfiguration {
     }
 
     @Bean
-    ContinuousAsyncProfiler continuousAsyncProfiler() {
-        return new ContinuousAsyncProfiler(properties);
+    ContinuousAsyncProfiler continuousAsyncProfiler(ContinuousAsyncProfilerMBeanPropertiesService continuousAsyncProfilerMBeanPropertiesService) {
+        return new ContinuousAsyncProfiler(properties, continuousAsyncProfilerMBeanPropertiesService);
     }
 }

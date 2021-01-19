@@ -15,18 +15,20 @@
  */
 package com.github.krzysztofslusarski.asyncprofiler;
 
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 
+@Slf4j
 @Configuration
-@Import(ContinuousAsyncProfilerMBeanConfiguration.class)
-@EnableConfigurationProperties(ContinuousAsyncProfilerBootProperties.class)
-public class ContinuousAsyncProfilerAutoConfiguration {
+public class ContinuousAsyncProfilerMBeanConfiguration {
     @Bean
-    ContinuousAsyncProfiler continuousAsyncProfiler(ContinuousAsyncProfilerBootProperties properties,
-                                                    ContinuousAsyncProfilerMBeanPropertiesService continuousAsyncProfilerMBeanPropertiesService) {
-        return new ContinuousAsyncProfiler(properties.toSpringFrameworkProperties(), continuousAsyncProfilerMBeanPropertiesService);
+    ContinuousAsyncProfilerMBeanPropertiesService continuousAsyncProfilerMBeanPropertiesService() {
+        return new ContinuousAsyncProfilerMBeanPropertiesService();
+    }
+
+    @Bean
+    ContinuousAsyncProfilerMBean continuousAsyncProfilerMBean(ContinuousAsyncProfilerMBeanPropertiesService continuousAsyncProfilerMBeanPropertiesService) {
+        return new ContinuousAsyncProfilerMBean(continuousAsyncProfilerMBeanPropertiesService);
     }
 }
