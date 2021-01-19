@@ -80,7 +80,7 @@ The async-profiler is run **all the time** in **wall-clock mode**. Output from t
 on/off profiling at runtime
 * ```async-profiler.continuous.profiler-lib-path``` - path to ```libasyncProfiler.so```
 * ```async-profiler.continuous.properties-repository = spring``` - what properties resources should be used
-  * ```spring``` - properties from spring context
+  * ```default``` - properties from spring context
   * ```jmx``` - properties from spring context with registered mbean for changing them in runtime   
 
 ## Troubleshooting
