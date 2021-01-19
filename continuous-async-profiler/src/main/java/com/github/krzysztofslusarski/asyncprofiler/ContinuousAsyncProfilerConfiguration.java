@@ -15,8 +15,10 @@
  */
 package com.github.krzysztofslusarski.asyncprofiler;
 
+import com.github.krzysztofslusarski.asyncprofiler.mbean.ContinuousAsyncProfilerMBeanConfiguration;
 import java.util.regex.Pattern;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,29 +28,36 @@ import org.springframework.context.annotation.Import;
 @Configuration
 @Import(ContinuousAsyncProfilerMBeanConfiguration.class)
 public class ContinuousAsyncProfilerConfiguration {
-
-    private final ContinuousAsyncProfilerProperties properties;
-
-    public ContinuousAsyncProfilerConfiguration(
+    @Bean
+    ContinuousAsyncProfilerManageableProperties defaultManageableProperties(
             @Value("${async-profiler.continuous.enabled:true}") boolean enabled,
-            @Value("${async-profiler.continuous.dump-interval:60}") int dumpIntervalSeconds,
             @Value("${async-profiler.continuous.continuous-outputs-max-age-hours:24}") int continuousOutputsMaxAgeHours,
             @Value("${async-profiler.continuous.archive-outputs-max-age-days:30}") int archiveOutputsMaxAgeDays,
             @Value("${async-profiler.continuous.archive-copy-regex:.*_13:0.*}") String archiveCopyRegex,
             @Value("${async-profiler.continuous.event:wall}") String event,
-            @Value("${async-profiler.continuous.profiler-lib-path:}") String profilerLibPath,
-            @Value("${async-profiler.continuous.stop-work-file:profiler-stop}") String stopFile,
-            @Value("${async-profiler.continuous.output-dir.archive:logs/archive}") String outputDirArchive,
-            @Value("${async-profiler.continuous.output-dir.continuous:logs/continuous}") String outputDirContinuous
-    ) {
-        this.properties = ContinuousAsyncProfilerProperties.builder()
+            @Value("${async-profiler.continuous.stop-work-file:profiler-stop}") String stopFile
+            ) {
+        return ContinuousAsyncProfilerManageableProperties.builder()
                 .enabled(enabled)
                 .event(event)
                 .stopFile(stopFile)
-                .dumpIntervalSeconds(dumpIntervalSeconds)
                 .continuousOutputsMaxAgeHours(continuousOutputsMaxAgeHours)
                 .archiveOutputsMaxAgeDays(archiveOutputsMaxAgeDays)
                 .compiledArchiveCopyRegex(Pattern.compile(archiveCopyRegex))
+                .build();
+    }
+
+    @Bean
+    ContinuousAsyncProfilerNotManageableProperties defaultNotManageableProperties(
+            @Value("${async-profiler.continuous.load-native-library:true}") boolean loadNativeLibrary,
+            @Value("${async-profiler.continuous.dump-interval:60}") int dumpIntervalSeconds,
+            @Value("${async-profiler.continuous.profiler-lib-path:}") String profilerLibPath,
+            @Value("${async-profiler.continuous.output-dir.archive:logs/archive}") String outputDirArchive,
+            @Value("${async-profiler.continuous.output-dir.continuous:logs/continuous}") String outputDirContinuous
+    ) {
+        return ContinuousAsyncProfilerNotManageableProperties.builder()
+                .loadNativeLibrary(loadNativeLibrary)
+                .dumpIntervalSeconds(dumpIntervalSeconds)
                 .continuousOutputDir(outputDirContinuous)
                 .archiveOutputDir(outputDirArchive)
                 .profilerLibPath(profilerLibPath)
@@ -56,7 +65,18 @@ public class ContinuousAsyncProfilerConfiguration {
     }
 
     @Bean
-    ContinuousAsyncProfiler continuousAsyncProfiler(ContinuousAsyncProfilerMBeanPropertiesService continuousAsyncProfilerMBeanPropertiesService) {
-        return new ContinuousAsyncProfiler(properties, continuousAsyncProfilerMBeanPropertiesService);
+    ContinuousAsyncProfiler continuousAsyncProfiler(ContinuousAsyncProfilerManageableProperties defaultManageableProperties,
+                                                    ContinuousAsyncProfilerNotManageableProperties defaultNotManageableProperties,
+                                                    @Autowired(required = false) ContinuousAsyncProfilerManageablePropertiesRepository manageablePropertiesRepository,
+                                                    @Autowired(required = false) ContinuousAsyncProfilerNotManageablePropertiesRepository notManageablePropertiesRepository) {
+        if (manageablePropertiesRepository == null) {
+            manageablePropertiesRepository = () -> defaultManageableProperties;
+        }
+
+        if (notManageablePropertiesRepository == null) {
+            notManageablePropertiesRepository = () -> defaultNotManageableProperties;
+        }
+
+        return new ContinuousAsyncProfiler(manageablePropertiesRepository, notManageablePropertiesRepository);
     }
 }

@@ -28,6 +28,10 @@ class ContinuousAsyncProfilerBootProperties {
     /**
      * if the tool should work or not
      */
+    private boolean loadNativeLibrary = true;
+    /**
+     * if the tool should work or not
+     */
     private boolean enabled = true;
     /**
      * custom path to libasyncProfiler.so
@@ -74,18 +78,24 @@ class ContinuousAsyncProfilerBootProperties {
      */
     private Pattern archiveCopyRegex = Pattern.compile(".*_13:0.*");
 
-    public ContinuousAsyncProfilerProperties toSpringFrameworkProperties() {
-        return ContinuousAsyncProfilerProperties.builder()
-                .enabled(enabled)
-                .event(event == null || event.isEmpty() ? "wall" : event)
-                .stopFile(stopWorkFile == null ? "profiler-stop" : stopWorkFile.toString())
-                .dumpIntervalSeconds(dumpInterval == null ? 60 : (int)dumpInterval.getSeconds())
-                .continuousOutputsMaxAgeHours(continuousOutputsMaxAgeHours == null ? 24 : (int) continuousOutputsMaxAgeHours.toHours())
-                .archiveOutputsMaxAgeDays(archiveOutputsMaxAgeDays == null ? 30 : (int) archiveOutputsMaxAgeDays.toDays())
-                .compiledArchiveCopyRegex(Pattern.compile(archiveCopyRegex == null ? ".*_13:0.*" : archiveCopyRegex.pattern()))
+    public ContinuousAsyncProfilerNotManageableProperties toSpringFrameworkNotManageableProperties() {
+        return ContinuousAsyncProfilerNotManageableProperties.builder()
+                .loadNativeLibrary(loadNativeLibrary)
+                .dumpIntervalSeconds(dumpInterval == null ? 60 : (int) dumpInterval.getSeconds())
                 .continuousOutputDir(outputDir == null || outputDir.continuous == null ? "logs/continuous" : outputDir.continuous.toString())
                 .archiveOutputDir(outputDir == null || outputDir.archive == null ? "logs/archive" : outputDir.archive.toString())
                 .profilerLibPath(profilerLibPath == null ? "" : profilerLibPath.toString())
+                .build();
+    }
+
+    public ContinuousAsyncProfilerManageableProperties toSpringFrameworkManageableProperties() {
+        return ContinuousAsyncProfilerManageableProperties.builder()
+                .enabled(enabled)
+                .event(event == null || event.isEmpty() ? "wall" : event)
+                .stopFile(stopWorkFile == null ? "profiler-stop" : stopWorkFile.toString())
+                .continuousOutputsMaxAgeHours(continuousOutputsMaxAgeHours == null ? 24 : (int) continuousOutputsMaxAgeHours.toHours())
+                .archiveOutputsMaxAgeDays(archiveOutputsMaxAgeDays == null ? 30 : (int) archiveOutputsMaxAgeDays.toDays())
+                .compiledArchiveCopyRegex(Pattern.compile(archiveCopyRegex == null ? ".*_13:0.*" : archiveCopyRegex.pattern()))
                 .build();
     }
 }

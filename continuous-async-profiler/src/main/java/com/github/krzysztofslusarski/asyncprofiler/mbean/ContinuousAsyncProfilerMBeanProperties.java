@@ -13,23 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.krzysztofslusarski.asyncprofiler;
+package com.github.krzysztofslusarski.asyncprofiler.mbean;
 
-import java.util.regex.Pattern;
-import lombok.Builder;
 import lombok.Value;
+import lombok.With;
 
+@With
 @Value
-@Builder
-class ContinuousAsyncProfilerProperties {
-    boolean enabled;
-    String profilerLibPath;
-    String event;
-    String stopFile;
-    String continuousOutputDir;
-    String archiveOutputDir;
-    int dumpIntervalSeconds;
-    int continuousOutputsMaxAgeHours;
-    int archiveOutputsMaxAgeDays;
-    Pattern compiledArchiveCopyRegex;
+class ContinuousAsyncProfilerMBeanProperties {
+    boolean disableProfiler;
+    String overriddenEvent;
 }

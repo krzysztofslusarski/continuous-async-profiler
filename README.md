@@ -67,6 +67,7 @@ The async-profiler is run **all the time** in **wall-clock mode**. Output from t
 
 ## Configuration properties and defaults
 
+* ```async-profiler.continuous.load-native-library = true``` - if  the tool should load native async-profiler library (turning off disables starter permanently)
 * ```async-profiler.continuous.enabled = true``` - if the tool should work or not
 * ```async-profiler.continuous.dump-interval = 60s``` - time in seconds, how often tool should dump profiler outputs
 * ```async-profiler.continuous.continuous-outputs-max-age-hours = 24h``` - time in hours, how long to keep files in the continuous directory
@@ -78,6 +79,9 @@ The async-profiler is run **all the time** in **wall-clock mode**. Output from t
 * ```async-profiler.continuous.stop-work-file = profiler-stop``` - path to a file, if the file exists then profiler is not running, using this file you can turn
 on/off profiling at runtime
 * ```async-profiler.continuous.profiler-lib-path``` - path to ```libasyncProfiler.so```
+* ```async-profiler.continuous.properties-repository = spring``` - what properties resources should be used
+  * ```spring``` - properties from spring context
+  * ```jmx``` - properties from spring context with registered mbean for changing them in runtime   
 
 ## Troubleshooting
 

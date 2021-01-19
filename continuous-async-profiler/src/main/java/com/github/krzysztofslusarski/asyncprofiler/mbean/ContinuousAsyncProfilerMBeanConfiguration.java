@@ -13,18 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.krzysztofslusarski.asyncprofiler;
+package com.github.krzysztofslusarski.asyncprofiler.mbean;
 
+import com.github.krzysztofslusarski.asyncprofiler.ContinuousAsyncProfilerManageableProperties;
+import com.github.krzysztofslusarski.asyncprofiler.ContinuousAsyncProfilerManageablePropertiesRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 
 @Slf4j
 @Configuration
+@RequiredArgsConstructor
+@Conditional(ContinuousAsyncProfilerMBeanCondition.class)
 public class ContinuousAsyncProfilerMBeanConfiguration {
+    private final ContinuousAsyncProfilerManageableProperties defaultManageableProperties;
+
     @Bean
     ContinuousAsyncProfilerMBeanPropertiesService continuousAsyncProfilerMBeanPropertiesService() {
-        return new ContinuousAsyncProfilerMBeanPropertiesService();
+        return new ContinuousAsyncProfilerMBeanPropertiesService(defaultManageableProperties);
+    }
+
+    @Bean
+    ContinuousAsyncProfilerManageablePropertiesRepository continuousAsyncProfilerManageablePropertiesRepository(ContinuousAsyncProfilerMBeanPropertiesService continuousAsyncProfilerMBeanPropertiesService) {
+        return new ContinuousAsyncProfilerMBeanManageablePropertiesRepository(continuousAsyncProfilerMBeanPropertiesService);
     }
 
     @Bean
