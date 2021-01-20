@@ -26,18 +26,14 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 class ContinuousAsyncProfilerArchiver implements Runnable {
-    private final ContinuousAsyncProfilerManageablePropertiesRepository manageablePropertiesRepository;
-    private final ContinuousAsyncProfilerNotManageablePropertiesRepository notManageablePropertiesRepository;
+    private final ContinuousAsyncProfilerNotManageableProperties notManageableProperties;
 
     private final Path continuousDir;
     private final BiPredicate<Path, BasicFileAttributes> predicate;
 
     public ContinuousAsyncProfilerArchiver(ContinuousAsyncProfilerManageablePropertiesRepository manageablePropertiesRepository,
-                                           ContinuousAsyncProfilerNotManageablePropertiesRepository notManageablePropertiesRepository) {
-        this.manageablePropertiesRepository = manageablePropertiesRepository;
-        this.notManageablePropertiesRepository = notManageablePropertiesRepository;
-
-        ContinuousAsyncProfilerNotManageableProperties notManageableProperties = notManageablePropertiesRepository.geNotManageableProperties();
+                                           ContinuousAsyncProfilerNotManageableProperties notManageableProperties) {
+        this.notManageableProperties =  notManageableProperties;
 
         this.continuousDir = Paths.get(notManageableProperties.getContinuousOutputDir());
         this.predicate = (p, ignore) -> manageablePropertiesRepository.getManageableProperties().getCompiledArchiveCopyRegex().matcher(p.getFileName().toString()).matches() && Files.isRegularFile(p);
@@ -45,8 +41,6 @@ class ContinuousAsyncProfilerArchiver implements Runnable {
 
     @Override
     public void run() {
-        ContinuousAsyncProfilerNotManageableProperties notManageableProperties = notManageablePropertiesRepository.geNotManageableProperties();
-
         try (Stream<Path> archiveStream = Files.find(continuousDir, 1, predicate)) {
             archiveStream.forEach(sourcePath -> {
                 String fileName = sourcePath.getFileName().toString();

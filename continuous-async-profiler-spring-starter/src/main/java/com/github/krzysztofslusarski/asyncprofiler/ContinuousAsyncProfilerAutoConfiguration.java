@@ -39,16 +39,11 @@ public class ContinuousAsyncProfilerAutoConfiguration {
     @Bean
     ContinuousAsyncProfiler continuousAsyncProfiler(ContinuousAsyncProfilerManageableProperties defaultManageableProperties,
                                                     ContinuousAsyncProfilerNotManageableProperties defaultNotManageableProperties,
-                                                    @Autowired(required = false) ContinuousAsyncProfilerManageablePropertiesRepository manageablePropertiesRepository,
-                                                    @Autowired(required = false) ContinuousAsyncProfilerNotManageablePropertiesRepository notManageablePropertiesRepository) {
+                                                    @Autowired(required = false) ContinuousAsyncProfilerManageablePropertiesRepository manageablePropertiesRepository) {
         if (manageablePropertiesRepository == null) {
             manageablePropertiesRepository = () -> defaultManageableProperties;
         }
 
-        if (notManageablePropertiesRepository == null) {
-            notManageablePropertiesRepository = () -> defaultNotManageableProperties;
-        }
-
-        return new ContinuousAsyncProfiler(manageablePropertiesRepository, notManageablePropertiesRepository);
+        return new ContinuousAsyncProfiler(manageablePropertiesRepository, defaultNotManageableProperties);
     }
 }

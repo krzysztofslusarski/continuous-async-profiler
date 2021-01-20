@@ -27,12 +27,11 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 class ContinuousAsyncProfilerCleaner implements Runnable {
     private final ContinuousAsyncProfilerManageablePropertiesRepository manageablePropertiesRepository;
-    private final ContinuousAsyncProfilerNotManageablePropertiesRepository notManageablePropertiesRepository;
+    private final ContinuousAsyncProfilerNotManageableProperties notManageableProperties;
 
     @Override
     public void run() {
         ContinuousAsyncProfilerManageableProperties manageableProperties = manageablePropertiesRepository.getManageableProperties();
-        ContinuousAsyncProfilerNotManageableProperties notManageableProperties = notManageablePropertiesRepository.geNotManageableProperties();
         long currentTime = System.currentTimeMillis();
         long continuousCutOffTime = currentTime - (manageableProperties.getContinuousOutputsMaxAgeHours() * SleepTime.ONE_HOUR);
         long archiveCutOffTime = currentTime - (manageableProperties.getArchiveOutputsMaxAgeDays() * SleepTime.ONE_DAY);

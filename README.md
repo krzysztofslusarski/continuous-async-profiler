@@ -90,10 +90,9 @@ on/off profiling at runtime
 
 ## Changing properties source
 
-You can change properties source from spring to any you want. You need to implement a spring bean, that implements following interfaces:
+You can change manageable properties source from spring to any you want. You need to implement a spring bean, that implements following interface:
 ```
 com.github.krzysztofslusarski.asyncprofiler.ContinuousAsyncProfilerManageablePropertiesRepository
-com.github.krzysztofslusarski.asyncprofiler.ContinuousAsyncProfilerNotManageablePropertiesRepository
 ``` 
 
 ## Troubleshooting

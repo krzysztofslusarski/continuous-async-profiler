@@ -39,9 +39,8 @@ public class ContinuousAsyncProfiler implements DisposableBean {
     private final ContinuousAsyncProfilerRunner profilerRunner;
 
     public ContinuousAsyncProfiler(ContinuousAsyncProfilerManageablePropertiesRepository manageablePropertiesRepository,
-                                   ContinuousAsyncProfilerNotManageablePropertiesRepository notManageablePropertiesRepository) {
+                                   ContinuousAsyncProfilerNotManageableProperties notManageableProperties) {
         ContinuousAsyncProfilerManageableProperties manageableProperties = manageablePropertiesRepository.getManageableProperties();
-        ContinuousAsyncProfilerNotManageableProperties notManageableProperties = notManageablePropertiesRepository.geNotManageableProperties();
         log.info("Staring with configuration: {} {}", manageableProperties, notManageableProperties);
 
         if (!notManageableProperties.isLoadNativeLibrary()) {
@@ -54,18 +53,18 @@ public class ContinuousAsyncProfiler implements DisposableBean {
                 AsyncProfiler.getInstance() : AsyncProfiler.getInstance(notManageableProperties.getProfilerLibPath());
 
         log.info("Starting continuous profiling threads");
-        profilerRunner = new ContinuousAsyncProfilerRunner(asyncProfiler, manageablePropertiesRepository, notManageablePropertiesRepository);
+        profilerRunner = new ContinuousAsyncProfilerRunner(asyncProfiler, manageablePropertiesRepository, notManageableProperties);
         scheduledFutures.add(mainExecutorService.scheduleAtFixedRate(
                 profilerRunner, 0, notManageableProperties.getDumpIntervalSeconds(), TimeUnit.SECONDS
         ));
         scheduledFutures.add(helperExecutorService.scheduleAtFixedRate(
-                new ContinuousAsyncProfilerCleaner(manageablePropertiesRepository, notManageablePropertiesRepository), 0, 1, TimeUnit.HOURS
+                new ContinuousAsyncProfilerCleaner(manageablePropertiesRepository, notManageableProperties), 0, 1, TimeUnit.HOURS
         ));
         scheduledFutures.add(helperExecutorService.scheduleAtFixedRate(
-                new ContinuousAsyncProfilerArchiver(manageablePropertiesRepository, notManageablePropertiesRepository), 0, 1, TimeUnit.DAYS
+                new ContinuousAsyncProfilerArchiver(manageablePropertiesRepository, notManageableProperties), 0, 1, TimeUnit.DAYS
         ));
         scheduledFutures.add(helperExecutorService.scheduleAtFixedRate(
-                new ContinuousAsyncProfilerCompressor(notManageablePropertiesRepository), 0, 10, TimeUnit.MINUTES
+                new ContinuousAsyncProfilerCompressor(notManageableProperties), 0, 10, TimeUnit.MINUTES
         ));
     }
 

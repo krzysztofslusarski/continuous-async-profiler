@@ -28,7 +28,7 @@ import one.profiler.AsyncProfiler;
 class ContinuousAsyncProfilerRunner implements Runnable {
     private final AsyncProfiler asyncProfiler;
     private final ContinuousAsyncProfilerManageablePropertiesRepository manageablePropertiesRepository;
-    private final ContinuousAsyncProfilerNotManageablePropertiesRepository notManageablePropertiesRepository;
+    private final ContinuousAsyncProfilerNotManageableProperties notManageableProperties;
 
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss");
 
@@ -45,7 +45,6 @@ class ContinuousAsyncProfilerRunner implements Runnable {
             }
 
             ContinuousAsyncProfilerManageableProperties manageableProperties = manageablePropertiesRepository.getManageableProperties();
-            ContinuousAsyncProfilerNotManageableProperties notManageableProperties = notManageablePropertiesRepository.geNotManageableProperties();
 
             if (stopFileExists(manageableProperties)) {
                 log.info("Stop file exists on filesystem: {}, will not run profiler", manageableProperties.getStopFile());
