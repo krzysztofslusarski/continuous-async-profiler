@@ -61,9 +61,12 @@ class ContinuousAsyncProfilerBootProperties {
         private Path archive = Paths.get("logs/archive");
     }
 
-    private PropertiesRepository propertiesRepository = PropertiesRepository.DEFAULT;
+    /**
+     * where to look for manageable properties - default is spring context properties
+     */
+    private ManageablePropertiesRepository manageablePropertiesRepository = ManageablePropertiesRepository.DEFAULT;
 
-    enum PropertiesRepository {
+    enum ManageablePropertiesRepository {
         DEFAULT,
         JMX,
     }
