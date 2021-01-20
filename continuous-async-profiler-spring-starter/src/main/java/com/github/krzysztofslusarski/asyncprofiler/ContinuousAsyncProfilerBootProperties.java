@@ -61,6 +61,13 @@ class ContinuousAsyncProfilerBootProperties {
         private Path archive = Paths.get("logs/archive");
     }
 
+    private PropertiesRepository propertiesRepository = PropertiesRepository.DEFAULT;
+
+    enum PropertiesRepository {
+        DEFAULT,
+        JMX,
+    }
+
     /**
      * duration of how often tool should dump profiler outputs
      */

@@ -41,7 +41,7 @@ public class ContinuousAsyncProfiler implements DisposableBean {
     public ContinuousAsyncProfiler(ContinuousAsyncProfilerManageablePropertiesRepository manageablePropertiesRepository,
                                    ContinuousAsyncProfilerNotManageablePropertiesRepository notManageablePropertiesRepository) {
         ContinuousAsyncProfilerManageableProperties manageableProperties = manageablePropertiesRepository.getManageableProperties();
-        ContinuousAsyncProfilerNotManageableProperties notManageableProperties = notManageablePropertiesRepository.getAsyncProfilerNotManageableProperties();
+        ContinuousAsyncProfilerNotManageableProperties notManageableProperties = notManageablePropertiesRepository.geNotManageableProperties();
         log.info("Staring with configuration: {} {}", manageableProperties, notManageableProperties);
 
         if (!notManageableProperties.isLoadNativeLibrary()) {

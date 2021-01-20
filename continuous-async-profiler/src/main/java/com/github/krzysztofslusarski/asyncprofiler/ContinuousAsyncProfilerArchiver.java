@@ -37,7 +37,7 @@ class ContinuousAsyncProfilerArchiver implements Runnable {
         this.manageablePropertiesRepository = manageablePropertiesRepository;
         this.notManageablePropertiesRepository = notManageablePropertiesRepository;
 
-        ContinuousAsyncProfilerNotManageableProperties notManageableProperties = notManageablePropertiesRepository.getAsyncProfilerNotManageableProperties();
+        ContinuousAsyncProfilerNotManageableProperties notManageableProperties = notManageablePropertiesRepository.geNotManageableProperties();
 
         this.continuousDir = Paths.get(notManageableProperties.getContinuousOutputDir());
         this.predicate = (p, ignore) -> manageablePropertiesRepository.getManageableProperties().getCompiledArchiveCopyRegex().matcher(p.getFileName().toString()).matches() && Files.isRegularFile(p);
@@ -45,7 +45,7 @@ class ContinuousAsyncProfilerArchiver implements Runnable {
 
     @Override
     public void run() {
-        ContinuousAsyncProfilerNotManageableProperties notManageableProperties = notManageablePropertiesRepository.getAsyncProfilerNotManageableProperties();
+        ContinuousAsyncProfilerNotManageableProperties notManageableProperties = notManageablePropertiesRepository.geNotManageableProperties();
 
         try (Stream<Path> archiveStream = Files.find(continuousDir, 1, predicate)) {
             archiveStream.forEach(sourcePath -> {

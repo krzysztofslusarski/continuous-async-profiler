@@ -32,7 +32,7 @@ class ContinuousAsyncProfilerCleaner implements Runnable {
     @Override
     public void run() {
         ContinuousAsyncProfilerManageableProperties manageableProperties = manageablePropertiesRepository.getManageableProperties();
-        ContinuousAsyncProfilerNotManageableProperties notManageableProperties = notManageablePropertiesRepository.getAsyncProfilerNotManageableProperties();
+        ContinuousAsyncProfilerNotManageableProperties notManageableProperties = notManageablePropertiesRepository.geNotManageableProperties();
         long currentTime = System.currentTimeMillis();
         long continuousCutOffTime = currentTime - (manageableProperties.getContinuousOutputsMaxAgeHours() * SleepTime.ONE_HOUR);
         long archiveCutOffTime = currentTime - (manageableProperties.getArchiveOutputsMaxAgeDays() * SleepTime.ONE_DAY);

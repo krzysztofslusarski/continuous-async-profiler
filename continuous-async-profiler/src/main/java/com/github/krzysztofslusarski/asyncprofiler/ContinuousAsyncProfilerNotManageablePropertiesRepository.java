@@ -16,5 +16,5 @@
 package com.github.krzysztofslusarski.asyncprofiler;
 
 public interface ContinuousAsyncProfilerNotManageablePropertiesRepository {
-    ContinuousAsyncProfilerNotManageableProperties getAsyncProfilerNotManageableProperties();
+    ContinuousAsyncProfilerNotManageableProperties geNotManageableProperties();
 }

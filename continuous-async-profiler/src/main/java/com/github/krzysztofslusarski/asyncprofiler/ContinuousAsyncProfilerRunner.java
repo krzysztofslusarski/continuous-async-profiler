@@ -45,7 +45,7 @@ class ContinuousAsyncProfilerRunner implements Runnable {
             }
 
             ContinuousAsyncProfilerManageableProperties manageableProperties = manageablePropertiesRepository.getManageableProperties();
-            ContinuousAsyncProfilerNotManageableProperties notManageableProperties = notManageablePropertiesRepository.getAsyncProfilerNotManageableProperties();
+            ContinuousAsyncProfilerNotManageableProperties notManageableProperties = notManageablePropertiesRepository.geNotManageableProperties();
 
             if (stopFileExists(manageableProperties)) {
                 log.info("Stop file exists on filesystem: {}, will not run profiler", manageableProperties.getStopFile());
