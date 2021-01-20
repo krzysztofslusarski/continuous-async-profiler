@@ -67,21 +67,34 @@ The async-profiler is run **all the time** in **wall-clock mode**. Output from t
 
 ## Configuration properties and defaults
 
-* ```async-profiler.continuous.load-native-library = true``` - if  the tool should load native async-profiler library (turning off disables starter permanently)
+### Properties manageable at runtime:
+
 * ```async-profiler.continuous.enabled = true``` - if the tool should work or not
-* ```async-profiler.continuous.dump-interval = 60s``` - time in seconds, how often tool should dump profiler outputs
 * ```async-profiler.continuous.continuous-outputs-max-age-hours = 24h``` - time in hours, how long to keep files in the continuous directory
 * ```async-profiler.continuous.archive-outputs-max-age-days = 30d``` - time in days, how long to keep files in the archive directory
 * ```async-profiler.continuous.archive-copy-regex = .*_13:0.*``` - regex for file name, which files should be copied from the continuous to the archive directory
 * ```async-profiler.continuous.event = wall``` - async-profiler event to fetch
-* ```async-profiler.continuous.output-dir.continuous = logs/continuous``` - where continuous output should be stored
-* ```async-profiler.continuous.output-dir.archive = logs/archive``` - where archive of the outputs should be stored
 * ```async-profiler.continuous.stop-work-file = profiler-stop``` - path to a file, if the file exists then profiler is not running, using this file you can turn
 on/off profiling at runtime
+
+### Properties not manageable at runtime:
+
+* ```async-profiler.continuous.load-native-library = true``` - if  the tool should load native async-profiler library (turning off disables starter permanently)
+* ```async-profiler.continuous.dump-interval = 60s``` - time in seconds, how often tool should dump profiler outputs
+* ```async-profiler.continuous.output-dir.continuous = logs/continuous``` - where continuous output should be stored
+* ```async-profiler.continuous.output-dir.archive = logs/archive``` - where archive of the outputs should be stored
 * ```async-profiler.continuous.profiler-lib-path``` - path to ```libasyncProfiler.so```
 * ```async-profiler.continuous.properties-repository = spring``` - what properties resources should be used
   * ```default``` - properties from spring context
   * ```jmx``` - properties from spring context with registered mbean for changing them in runtime   
+
+## Changing properties source
+
+You can change properties source from spring to any you want. You need to implement a class, that implements following interfaces:
+```
+com.github.krzysztofslusarski.asyncprofiler.ContinuousAsyncProfilerManageablePropertiesRepository
+com.github.krzysztofslusarski.asyncprofiler.ContinuousAsyncProfilerNotManageablePropertiesRepository
+``` 
 
 ## Troubleshooting
 
