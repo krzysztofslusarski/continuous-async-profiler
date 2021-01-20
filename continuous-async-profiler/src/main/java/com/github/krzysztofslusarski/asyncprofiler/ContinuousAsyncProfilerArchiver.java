@@ -26,14 +26,17 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 class ContinuousAsyncProfilerArchiver implements Runnable {
-    private final ContinuousAsyncProfilerProperties properties;
+    private final ContinuousAsyncProfilerNotManageableProperties notManageableProperties;
+
     private final Path continuousDir;
     private final BiPredicate<Path, BasicFileAttributes> predicate;
 
-    public ContinuousAsyncProfilerArchiver(ContinuousAsyncProfilerProperties properties) {
-        this.properties = properties;
-        this.continuousDir = Paths.get(properties.getContinuousOutputDir());
-        this.predicate = (p, ignore) -> properties.getCompiledArchiveCopyRegex().matcher(p.getFileName().toString()).matches() && Files.isRegularFile(p);
+    public ContinuousAsyncProfilerArchiver(ContinuousAsyncProfilerManageablePropertiesRepository manageablePropertiesRepository,
+                                           ContinuousAsyncProfilerNotManageableProperties notManageableProperties) {
+        this.notManageableProperties =  notManageableProperties;
+
+        this.continuousDir = Paths.get(notManageableProperties.getContinuousOutputDir());
+        this.predicate = (p, ignore) -> manageablePropertiesRepository.getManageableProperties().getCompiledArchiveCopyRegex().matcher(p.getFileName().toString()).matches() && Files.isRegularFile(p);
     }
 
     @Override
@@ -41,7 +44,7 @@ class ContinuousAsyncProfilerArchiver implements Runnable {
         try (Stream<Path> archiveStream = Files.find(continuousDir, 1, predicate)) {
             archiveStream.forEach(sourcePath -> {
                 String fileName = sourcePath.getFileName().toString();
-                Path destinationPath = Paths.get(properties.getArchiveOutputDir(), fileName);
+                Path destinationPath = Paths.get(notManageableProperties.getArchiveOutputDir(), fileName);
                 if (!destinationPath.toFile().exists()) {
                     log.info("Archiving: {} to: {}", fileName, destinationPath.toAbsolutePath().toString());
                     try {
@@ -54,7 +57,7 @@ class ContinuousAsyncProfilerArchiver implements Runnable {
                 }
             });
         } catch (IOException e) {
-            log.error("Cannot list dir: " + properties.getContinuousOutputDir(), e);
+            log.error("Cannot list dir: " + notManageableProperties.getContinuousOutputDir(), e);
         }
     }
 }

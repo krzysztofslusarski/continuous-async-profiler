@@ -35,8 +35,8 @@ class ContinuousAsyncProfilerCompressor implements Runnable {
     private final BiPredicate<Path, BasicFileAttributes> predicate;
     private final Comparator<Path> oldestFirst;
 
-    public ContinuousAsyncProfilerCompressor(ContinuousAsyncProfilerProperties properties) {
-        this.continuousDir = Paths.get(properties.getContinuousOutputDir());
+    public ContinuousAsyncProfilerCompressor(ContinuousAsyncProfilerNotManageableProperties notManageableProperties) {
+        this.continuousDir = Paths.get(notManageableProperties.getContinuousOutputDir());
         this.predicate = (p, ignore) -> p.getFileName().toString().endsWith("jfr");
         this.oldestFirst = (o1, o2) -> {
             long firstModified = o1.toFile().lastModified();

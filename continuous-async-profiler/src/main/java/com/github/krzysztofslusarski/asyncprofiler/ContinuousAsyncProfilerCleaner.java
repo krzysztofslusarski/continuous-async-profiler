@@ -26,17 +26,19 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 class ContinuousAsyncProfilerCleaner implements Runnable {
-    private final ContinuousAsyncProfilerProperties properties;
+    private final ContinuousAsyncProfilerManageablePropertiesRepository manageablePropertiesRepository;
+    private final ContinuousAsyncProfilerNotManageableProperties notManageableProperties;
 
     @Override
     public void run() {
+        ContinuousAsyncProfilerManageableProperties manageableProperties = manageablePropertiesRepository.getManageableProperties();
         long currentTime = System.currentTimeMillis();
-        long continuousCutOffTime = currentTime - (properties.getContinuousOutputsMaxAgeHours() * SleepTime.ONE_HOUR);
-        long archiveCutOffTime = currentTime - (properties.getArchiveOutputsMaxAgeDays() * SleepTime.ONE_DAY);
+        long continuousCutOffTime = currentTime - (manageableProperties.getContinuousOutputsMaxAgeHours() * SleepTime.ONE_HOUR);
+        long archiveCutOffTime = currentTime - (manageableProperties.getArchiveOutputsMaxAgeDays() * SleepTime.ONE_DAY);
         log.info("Removing old continuous output");
-        delete(properties.getContinuousOutputDir(), continuousCutOffTime);
+        delete(notManageableProperties.getContinuousOutputDir(), continuousCutOffTime);
         log.info("Removing old archive output");
-        delete(properties.getArchiveOutputDir(), archiveCutOffTime);
+        delete(notManageableProperties.getArchiveOutputDir(), archiveCutOffTime);
     }
 
     public void delete(String cleanDir, long cutOffTime) {

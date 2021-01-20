@@ -38,35 +38,37 @@ public class ContinuousAsyncProfiler implements DisposableBean {
     private final ScheduledExecutorService helperExecutorService = new ScheduledThreadPoolExecutor(1, threadFactory);
     private final ContinuousAsyncProfilerRunner profilerRunner;
 
-    public ContinuousAsyncProfiler(ContinuousAsyncProfilerProperties properties) {
-        log.info("Staring with configuration: {}", properties);
+    public ContinuousAsyncProfiler(ContinuousAsyncProfilerManageablePropertiesRepository manageablePropertiesRepository,
+                                   ContinuousAsyncProfilerNotManageableProperties notManageableProperties) {
+        ContinuousAsyncProfilerManageableProperties manageableProperties = manageablePropertiesRepository.getManageableProperties();
+        log.info("Staring with configuration: {} {}", manageableProperties, notManageableProperties);
 
-        if (!properties.isEnabled()) {
+        if (!notManageableProperties.isLoadNativeLibrary()) {
             profilerRunner = null;
             return;
         }
 
-        createOutputDirectories(properties);
-        AsyncProfiler asyncProfiler = StringUtils.isEmpty(properties.getProfilerLibPath()) ?
-                AsyncProfiler.getInstance() : AsyncProfiler.getInstance(properties.getProfilerLibPath());
+        createOutputDirectories(notManageableProperties);
+        AsyncProfiler asyncProfiler = StringUtils.isEmpty(notManageableProperties.getProfilerLibPath()) ?
+                AsyncProfiler.getInstance() : AsyncProfiler.getInstance(notManageableProperties.getProfilerLibPath());
 
         log.info("Starting continuous profiling threads");
-        profilerRunner = new ContinuousAsyncProfilerRunner(asyncProfiler, properties);
+        profilerRunner = new ContinuousAsyncProfilerRunner(asyncProfiler, manageablePropertiesRepository, notManageableProperties);
         scheduledFutures.add(mainExecutorService.scheduleAtFixedRate(
-                profilerRunner, 0, properties.getDumpIntervalSeconds(), TimeUnit.SECONDS
+                profilerRunner, 0, notManageableProperties.getDumpIntervalSeconds(), TimeUnit.SECONDS
         ));
         scheduledFutures.add(helperExecutorService.scheduleAtFixedRate(
-                new ContinuousAsyncProfilerCleaner(properties), 0, 1, TimeUnit.HOURS
+                new ContinuousAsyncProfilerCleaner(manageablePropertiesRepository, notManageableProperties), 0, 1, TimeUnit.HOURS
         ));
         scheduledFutures.add(helperExecutorService.scheduleAtFixedRate(
-                new ContinuousAsyncProfilerArchiver(properties), 0, 1, TimeUnit.DAYS
+                new ContinuousAsyncProfilerArchiver(manageablePropertiesRepository, notManageableProperties), 0, 1, TimeUnit.DAYS
         ));
         scheduledFutures.add(helperExecutorService.scheduleAtFixedRate(
-                new ContinuousAsyncProfilerCompressor(properties), 0, 10, TimeUnit.MINUTES
+                new ContinuousAsyncProfilerCompressor(notManageableProperties), 0, 10, TimeUnit.MINUTES
         ));
     }
 
-    private void createOutputDirectories(ContinuousAsyncProfilerProperties properties) {
+    private void createOutputDirectories(ContinuousAsyncProfilerNotManageableProperties properties) {
         try {
             log.debug("Checking if output dirs exist");
             Files.createDirectories(Paths.get(properties.getArchiveOutputDir()));

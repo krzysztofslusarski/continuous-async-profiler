@@ -27,7 +27,8 @@ import one.profiler.AsyncProfiler;
 @RequiredArgsConstructor
 class ContinuousAsyncProfilerRunner implements Runnable {
     private final AsyncProfiler asyncProfiler;
-    private final ContinuousAsyncProfilerProperties properties;
+    private final ContinuousAsyncProfilerManageablePropertiesRepository manageablePropertiesRepository;
+    private final ContinuousAsyncProfilerNotManageableProperties notManageableProperties;
 
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss");
 
@@ -43,11 +44,15 @@ class ContinuousAsyncProfilerRunner implements Runnable {
                 started = false;
             }
 
-            if (stopFileExists()) {
-                log.info("Stop file exists on filesystem: {}, will not run profiler", properties.getStopFile());
+            ContinuousAsyncProfilerManageableProperties manageableProperties = manageablePropertiesRepository.getManageableProperties();
+
+            if (stopFileExists(manageableProperties)) {
+                log.info("Stop file exists on filesystem: {}, will not run profiler", manageableProperties.getStopFile());
+            } else if (!manageableProperties.isEnabled()) {
+                log.info("Profiler is disabled by managable property, will not run profiler");
             } else {
                 log.info("Starting async-profiler");
-                params = createParams();
+                params = createParams(manageableProperties, notManageableProperties);
                 asyncProfiler.execute("start," + params);
                 started = true;
             }
@@ -68,16 +73,20 @@ class ContinuousAsyncProfilerRunner implements Runnable {
         asyncProfiler.stop();
     }
 
-    private boolean stopFileExists() {
-        return Paths.get(properties.getStopFile()).toFile().exists();
+    private boolean stopFileExists(ContinuousAsyncProfilerManageableProperties manageableProperties) {
+        return Paths.get(manageableProperties.getStopFile()).toFile().exists();
     }
 
-    private String createParams() {
+    private String createParams(ContinuousAsyncProfilerManageableProperties manageableProperties,
+                                ContinuousAsyncProfilerNotManageableProperties notManageableProperties) {
         String date = formatter.format(LocalDateTime.now());
+        String event = manageableProperties.getEvent();
+
         return String.format(
-                "jfr,event=%s,file=%s/%s.jfr",
-                properties.getEvent(),
-                properties.getContinuousOutputDir(),
+                "jfr,event=%s,file=%s/%s-%s.jfr",
+                event,
+                notManageableProperties.getContinuousOutputDir(),
+                event,
                 date
         );
     }

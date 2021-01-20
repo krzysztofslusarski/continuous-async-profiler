@@ -18,17 +18,15 @@ package com.github.krzysztofslusarski.asyncprofiler;
 import java.util.regex.Pattern;
 import lombok.Builder;
 import lombok.Value;
+import lombok.With;
 
+@With
 @Value
 @Builder
-class ContinuousAsyncProfilerProperties {
+public class ContinuousAsyncProfilerManageableProperties {
     boolean enabled;
-    String profilerLibPath;
     String event;
     String stopFile;
-    String continuousOutputDir;
-    String archiveOutputDir;
-    int dumpIntervalSeconds;
     int continuousOutputsMaxAgeHours;
     int archiveOutputsMaxAgeDays;
     Pattern compiledArchiveCopyRegex;
