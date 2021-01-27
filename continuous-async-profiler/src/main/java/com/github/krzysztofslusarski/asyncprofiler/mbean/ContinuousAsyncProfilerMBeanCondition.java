@@ -22,7 +22,7 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 class ContinuousAsyncProfilerMBeanCondition implements Condition {
     @Override
     public boolean matches(ConditionContext conditionContext, AnnotatedTypeMetadata annotatedTypeMetadata) {
-        String repositoryType = conditionContext.getEnvironment().getProperty("async-profiler.continuous.properties-repository");
+        String repositoryType = conditionContext.getEnvironment().getProperty("async-profiler.continuous.manageable-properties-repository");
         return "jmx".equalsIgnoreCase(repositoryType);
     }
 }
