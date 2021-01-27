@@ -84,7 +84,7 @@ on/off profiling at runtime
 * ```async-profiler.continuous.output-dir.continuous = logs/continuous``` - where continuous output should be stored
 * ```async-profiler.continuous.output-dir.archive = logs/archive``` - where archive of the outputs should be stored
 * ```async-profiler.continuous.profiler-lib-path``` - path to ```libasyncProfiler.so```
-* ```async-profiler.continuous.manageable-properties-repository = default``` - what properties resources should be used
+* ```async-profiler.continuous.properties-repository = default``` - what manageable properties resources should be used
   * ```default``` - properties from spring context
   * ```jmx``` - properties from spring context with registered mbean for changing them in runtime   
 
