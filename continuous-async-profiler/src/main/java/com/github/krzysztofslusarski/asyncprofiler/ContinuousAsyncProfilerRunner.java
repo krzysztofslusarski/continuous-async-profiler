@@ -51,8 +51,8 @@ class ContinuousAsyncProfilerRunner implements Runnable {
             } else if (!manageableProperties.isEnabled()) {
                 log.info("Profiler is disabled by managable property, will not run profiler");
             } else {
-                log.info("Starting async-profiler");
                 params = createParams(manageableProperties, notManageableProperties);
+                log.info("Starting async-profiler with params: {}", params);
                 asyncProfiler.execute("start," + params);
                 started = true;
             }
@@ -83,7 +83,8 @@ class ContinuousAsyncProfilerRunner implements Runnable {
         String event = manageableProperties.getEvent();
 
         return String.format(
-                "jfr,event=%s,file=%s/%s-%s.jfr",
+                "jfr,safemode=%s,event=%s,file=%s/%s-%s.jfr",
+                notManageableProperties.getSafemode() + "",
                 event,
                 notManageableProperties.getContinuousOutputDir(),
                 event,

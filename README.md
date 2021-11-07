@@ -80,6 +80,7 @@ on/off profiling at runtime
 ### Properties not manageable at runtime:
 
 * ```async-profiler.continuous.load-native-library = true``` - if  the tool should load native async-profiler library (turning off disables starter permanently)
+* ```async-profiler.continuous.safemode = 16``` - the safemode of the async-profiler, the default is **16** due to [#488](https://github.com/jvm-profiling-tools/async-profiler/issues/488)
 * ```async-profiler.continuous.dump-interval = 60s``` - time in seconds, how often tool should dump profiler outputs
 * ```async-profiler.continuous.output-dir.continuous = logs/continuous``` - where continuous output should be stored
 * ```async-profiler.continuous.output-dir.archive = logs/archive``` - where archive of the outputs should be stored
