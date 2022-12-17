@@ -1,25 +1,11 @@
 # continuous-async-profiler
 This is a spring boot library that runs async-profiler in the continuous mode.
 
-## Third party software needed
+This project is just a set of tool that run **async-profiler**.  
 
-This project is just a set of tool that run **async-profiler**. You need to install it on your operating system. 
-
-### Step 1 - download release or build from sources
-
-Simply go to [async-profiler GitHub](https://github.com/jvm-profiling-tools/async-profiler) and follow instructions written in README.
-
-### Step 2 - copy library to your filesystem
-
-Next you need to copy ```libasyncProfiler.so``` file to any of ```java.library.path``` dir. Here are the defaults:
-
-* ```/usr/java/packages/lib```
-* ```/usr/lib64```
-* ```/lib64```
-* ```/lib```
-* ```/usr/lib``` 
-
-If you want to use the other path to  ```libasyncProfiler.so``` you can do it with spring application properties/yaml/... For example:
+If you want to use the other version of profiler than **2.9** provided by 
+[AP-Loader](https://github.com/jvm-profiling-tools/ap-loader), you need to specify 
+path to  ```libasyncProfiler.so```. You can do it with spring application properties/yaml/... For example:
 
 ```properties
 async-profiler.continuous.profiler-lib-path=/path/to/libasyncProfiler.so
@@ -33,7 +19,7 @@ You just need to add dependency to your spring boot application
 <dependency>
     <groupId>com.github.krzysztofslusarski</groupId>
     <artifactId>continuous-async-profiler-spring-starter</artifactId>
-    <version>1.6</version>
+    <version>2.9</version>
 </dependency>
 ```
 
@@ -47,7 +33,7 @@ with a proper version.
 <dependency>
     <groupId>com.github.krzysztofslusarski</groupId>
     <artifactId>continuous-async-profiler</artifactId>
-    <version>1.6</version>
+    <version>2.9</version>
 </dependency>
 ```
 
