@@ -26,5 +26,4 @@ public class ContinuousAsyncProfilerNotManageableProperties {
     String continuousOutputDir;
     String archiveOutputDir;
     int dumpIntervalSeconds;
-    int safemode;
 }

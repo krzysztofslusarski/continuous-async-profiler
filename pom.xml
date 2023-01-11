@@ -61,7 +61,7 @@
         <dependency>
             <groupId>me.bechberger</groupId>
             <artifactId>ap-loader</artifactId>
-            <version>2.9-all</version>
+            <version>2.9-2-all</version>
         </dependency>
     </dependencies>
 

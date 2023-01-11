@@ -83,8 +83,7 @@ class ContinuousAsyncProfilerRunner implements Runnable {
         String event = manageableProperties.getEvent();
 
         return String.format(
-                "jfr,safemode=%s,event=%s,file=%s/%s-%s.jfr",
-                notManageableProperties.getSafemode() + "",
+                "jfr,event=%s,file=%s/%s-%s.jfr",
                 event,
                 notManageableProperties.getContinuousOutputDir(),
                 event,

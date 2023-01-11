@@ -30,10 +30,6 @@ class ContinuousAsyncProfilerBootProperties {
      */
     private boolean loadNativeLibrary = true;
     /**
-     * Safemode passed to async-profiler, default is 16 due to issue #488
-     */
-    private int safemode = 16;
-    /**
      * if the tool should work or not
      */
     private boolean enabled = true;
@@ -99,7 +95,6 @@ class ContinuousAsyncProfilerBootProperties {
                 .continuousOutputDir(outputDir == null || outputDir.continuous == null ? "logs/continuous" : outputDir.continuous.toString())
                 .archiveOutputDir(outputDir == null || outputDir.archive == null ? "logs/archive" : outputDir.archive.toString())
                 .profilerLibPath(profilerLibPath == null ? "" : profilerLibPath.toString())
-                .safemode(safemode)
                 .build();
     }
 
