@@ -61,12 +61,15 @@ The async-profiler is run **all the time** in **wall-clock mode**. Output from t
 * ```async-profiler.continuous.archive-copy-regex = .*_13:0.*``` - regex for file name, which files should be copied from the continuous to the archive directory
 * ```async-profiler.continuous.event = wall``` - async-profiler event to fetch
 * ```async-profiler.continuous.stop-work-file = profiler-stop``` - path to a file, if the file exists then profiler is not running, using this file you can turn
+* ```async-profiler.continuous.additional-parameters``` - additional parameters, for example `alloc=2m,lock=10ms` 
+* ```async-profiler.continuous.file-prefix = profiling``` - name prefix used for jfr files
 on/off profiling at runtime
 
 ### Properties not manageable at runtime:
 
 * ```async-profiler.continuous.load-native-library = true``` - if  the tool should load native async-profiler library (turning off disables starter permanently)
 * ```async-profiler.continuous.dump-interval = 60s``` - time in seconds, how often tool should dump profiler outputs
+* ```async-profiler.continuous.compression-interval = 600s``` - time in seconds, how often tool should compress profiler outputs
 * ```async-profiler.continuous.output-dir.continuous = logs/continuous``` - where continuous output should be stored
 * ```async-profiler.continuous.output-dir.archive = logs/archive``` - where archive of the outputs should be stored
 * ```async-profiler.continuous.profiler-lib-path``` - path to ```libasyncProfiler.so```

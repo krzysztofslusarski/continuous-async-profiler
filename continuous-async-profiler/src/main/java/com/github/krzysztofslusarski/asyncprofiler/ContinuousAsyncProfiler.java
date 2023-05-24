@@ -69,9 +69,12 @@ public class ContinuousAsyncProfiler implements DisposableBean {
         scheduledFutures.add(helperExecutorService.scheduleAtFixedRate(
                 new ContinuousAsyncProfilerArchiver(manageablePropertiesRepository, notManageableProperties), 0, 1, TimeUnit.DAYS
         ));
-        scheduledFutures.add(helperExecutorService.scheduleAtFixedRate(
-                new ContinuousAsyncProfilerCompressor(notManageableProperties), 0, 10, TimeUnit.MINUTES
-        ));
+        int compressionIntervalSeconds = notManageableProperties.getCompressionIntervalSeconds();
+        if (compressionIntervalSeconds > 0) {
+            scheduledFutures.add(helperExecutorService.scheduleAtFixedRate(
+                    new ContinuousAsyncProfilerCompressor(notManageableProperties), 0, compressionIntervalSeconds, TimeUnit.SECONDS
+            ));
+        }
     }
 
     private void createOutputDirectories(ContinuousAsyncProfilerNotManageableProperties properties) {
