@@ -27,7 +27,6 @@ public class ContinuousAsyncProfilerManageableProperties {
     boolean enabled;
     String event;
     String additionalParameters;
-    String filePrefix;
     String stopFile;
     int continuousOutputsMaxAgeHours;
     int archiveOutputsMaxAgeDays;

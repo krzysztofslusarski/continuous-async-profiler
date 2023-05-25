@@ -36,8 +36,7 @@ public class ContinuousAsyncProfilerConfiguration {
             @Value("${async-profiler.continuous.archive-copy-regex:.*_13:0.*}") String archiveCopyRegex,
             @Value("${async-profiler.continuous.event:wall}") String event,
             @Value("${async-profiler.continuous.stop-work-file:profiler-stop}") String stopFile,
-            @Value("${async-profiler.continuous.additional-parameters:}") String additionalParameters,
-            @Value("${async-profiler.continuous.file-prefix:profiling}") String filePrefix
+            @Value("${async-profiler.continuous.additional-parameters:}") String additionalParameters
             ) {
         return ContinuousAsyncProfilerManageableProperties.builder()
                 .enabled(enabled)
@@ -47,7 +46,6 @@ public class ContinuousAsyncProfilerConfiguration {
                 .archiveOutputsMaxAgeDays(archiveOutputsMaxAgeDays)
                 .compiledArchiveCopyRegex(Pattern.compile(archiveCopyRegex))
                 .additionalParameters(additionalParameters)
-                .filePrefix(filePrefix)
                 .build();
     }
 
