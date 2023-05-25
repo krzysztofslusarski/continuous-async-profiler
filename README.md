@@ -62,7 +62,6 @@ The async-profiler is run **all the time** in **wall-clock mode**. Output from t
 * ```async-profiler.continuous.event = wall``` - async-profiler event to fetch
 * ```async-profiler.continuous.stop-work-file = profiler-stop``` - path to a file, if the file exists then profiler is not running, using this file you can turn
 * ```async-profiler.continuous.additional-parameters``` - additional parameters, for example `alloc=2m,lock=10ms` 
-* ```async-profiler.continuous.file-prefix = profiling``` - name prefix used for jfr files
 on/off profiling at runtime
 
 ### Properties not manageable at runtime:
