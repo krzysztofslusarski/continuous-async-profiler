@@ -68,7 +68,7 @@ on/off profiling at runtime
 
 * ```async-profiler.continuous.load-native-library = true``` - if  the tool should load native async-profiler library (turning off disables starter permanently)
 * ```async-profiler.continuous.dump-interval = 60s``` - time in seconds, how often tool should dump profiler outputs
-* ```async-profiler.continuous.compression-interval = 600s``` - time in seconds, how often tool should compress profiler outputs
+* ```async-profiler.continuous.compression-interval = 600s``` - time in seconds, how often tool should compress profiler outputs, values <= 0 disable compression
 * ```async-profiler.continuous.output-dir.continuous = logs/continuous``` - where continuous output should be stored
 * ```async-profiler.continuous.output-dir.archive = logs/archive``` - where archive of the outputs should be stored
 * ```async-profiler.continuous.profiler-lib-path``` - path to ```libasyncProfiler.so```
