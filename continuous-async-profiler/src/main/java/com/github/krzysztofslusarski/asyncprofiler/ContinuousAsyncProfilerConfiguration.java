@@ -35,7 +35,8 @@ public class ContinuousAsyncProfilerConfiguration {
             @Value("${async-profiler.continuous.archive-outputs-max-age-days:30}") int archiveOutputsMaxAgeDays,
             @Value("${async-profiler.continuous.archive-copy-regex:.*_13:0.*}") String archiveCopyRegex,
             @Value("${async-profiler.continuous.event:wall}") String event,
-            @Value("${async-profiler.continuous.stop-work-file:profiler-stop}") String stopFile
+            @Value("${async-profiler.continuous.stop-work-file:profiler-stop}") String stopFile,
+            @Value("${async-profiler.continuous.additional-parameters:}") String additionalParameters
             ) {
         return ContinuousAsyncProfilerManageableProperties.builder()
                 .enabled(enabled)
@@ -44,6 +45,7 @@ public class ContinuousAsyncProfilerConfiguration {
                 .continuousOutputsMaxAgeHours(continuousOutputsMaxAgeHours)
                 .archiveOutputsMaxAgeDays(archiveOutputsMaxAgeDays)
                 .compiledArchiveCopyRegex(Pattern.compile(archiveCopyRegex))
+                .additionalParameters(additionalParameters)
                 .build();
     }
 
@@ -51,6 +53,7 @@ public class ContinuousAsyncProfilerConfiguration {
     ContinuousAsyncProfilerNotManageableProperties defaultNotManageableProperties(
             @Value("${async-profiler.continuous.load-native-library:true}") boolean loadNativeLibrary,
             @Value("${async-profiler.continuous.dump-interval:60}") int dumpIntervalSeconds,
+            @Value("${async-profiler.continuous.compression-interval:600}") int compressionInterval,
             @Value("${async-profiler.continuous.profiler-lib-path:}") String profilerLibPath,
             @Value("${async-profiler.continuous.output-dir.archive:logs/archive}") String outputDirArchive,
             @Value("${async-profiler.continuous.output-dir.continuous:logs/continuous}") String outputDirContinuous
@@ -59,6 +62,7 @@ public class ContinuousAsyncProfilerConfiguration {
                 .loadNativeLibrary(loadNativeLibrary)
                 .dumpIntervalSeconds(dumpIntervalSeconds)
                 .continuousOutputDir(outputDirContinuous)
+                .compressionIntervalSeconds(compressionInterval)
                 .archiveOutputDir(outputDirArchive)
                 .profilerLibPath(profilerLibPath)
                 .build();

@@ -82,9 +82,15 @@ class ContinuousAsyncProfilerRunner implements Runnable {
         String date = formatter.format(LocalDateTime.now());
         String event = manageableProperties.getEvent();
 
+        String additionalParameters = "";
+        if (manageableProperties.getAdditionalParameters() != null && manageableProperties.getAdditionalParameters().trim().length() > 0) {
+            additionalParameters = "," + manageableProperties.getAdditionalParameters().trim();
+        }
+
         return String.format(
-                "jfr,event=%s,file=%s/%s-%s.jfr",
+                "jfr,event=%s%s,file=%s/%s-%s.jfr",
                 event,
+                additionalParameters,
                 notManageableProperties.getContinuousOutputDir(),
                 event,
                 date

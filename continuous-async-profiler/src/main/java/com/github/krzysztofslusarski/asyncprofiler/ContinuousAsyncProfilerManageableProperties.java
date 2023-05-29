@@ -26,6 +26,7 @@ import lombok.With;
 public class ContinuousAsyncProfilerManageableProperties {
     boolean enabled;
     String event;
+    String additionalParameters;
     String stopFile;
     int continuousOutputsMaxAgeHours;
     int archiveOutputsMaxAgeDays;
