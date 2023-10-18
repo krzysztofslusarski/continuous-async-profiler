@@ -31,4 +31,5 @@ public class ContinuousAsyncProfilerManageableProperties {
     int continuousOutputsMaxAgeHours;
     int archiveOutputsMaxAgeDays;
     Pattern compiledArchiveCopyRegex;
+    String prefix;
 }
