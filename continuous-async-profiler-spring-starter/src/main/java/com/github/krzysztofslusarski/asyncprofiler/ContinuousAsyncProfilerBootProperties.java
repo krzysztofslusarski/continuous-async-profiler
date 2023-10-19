@@ -41,6 +41,8 @@ class ContinuousAsyncProfilerBootProperties {
      * async-profiler event to fetch
      */
     private String event = "wall";
+
+    private String prefix = "";
     /**
      * path to a file, if the file exists then profiler is not running, using this file you can turn
      * on/off profiling at runtime
@@ -106,6 +108,7 @@ class ContinuousAsyncProfilerBootProperties {
                 .continuousOutputsMaxAgeHours(continuousOutputsMaxAgeHours == null ? 24 : (int) continuousOutputsMaxAgeHours.toHours())
                 .archiveOutputsMaxAgeDays(archiveOutputsMaxAgeDays == null ? 30 : (int) archiveOutputsMaxAgeDays.toDays())
                 .compiledArchiveCopyRegex(Pattern.compile(archiveCopyRegex == null ? ".*_13:0.*" : archiveCopyRegex.pattern()))
+                .prefix(prefix)
                 .build();
     }
 }
