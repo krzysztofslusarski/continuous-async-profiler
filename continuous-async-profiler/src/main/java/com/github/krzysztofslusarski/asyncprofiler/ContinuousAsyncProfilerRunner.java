@@ -88,10 +88,11 @@ class ContinuousAsyncProfilerRunner implements Runnable {
         }
 
         return String.format(
-                "jfr,event=%s%s,file=%s/%s-%s.jfr",
+                "jfr,event=%s%s,file=%s/%s%s-%s.jfr",
                 event,
                 additionalParameters,
                 notManageableProperties.getContinuousOutputDir(),
+                manageableProperties.getPrefix() == null ? "" : manageableProperties.getPrefix(),
                 event,
                 date
         );
