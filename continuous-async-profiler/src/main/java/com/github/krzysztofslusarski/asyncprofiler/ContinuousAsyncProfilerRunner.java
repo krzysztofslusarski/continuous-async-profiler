@@ -92,7 +92,7 @@ class ContinuousAsyncProfilerRunner implements Runnable {
                 event,
                 additionalParameters,
                 notManageableProperties.getContinuousOutputDir(),
-                manageableProperties.getPrefix(),
+                manageableProperties.getPrefix() == null ? "" : manageableProperties.getPrefix(),
                 event,
                 date
         );
