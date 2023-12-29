@@ -77,6 +77,12 @@ class ContinuousAsyncProfilerBootProperties {
      * duration of how often tool should dump profiler outputs
      */
     private Duration dumpInterval = Duration.ofSeconds(60);
+
+    /**
+     * duration of how often tool should make .jfr files compression
+     */
+    private Duration compressionInterval = Duration.ofMinutes(10);
+
     /**
      * time in hours, how long to keep files in the continuous directory
      */
@@ -94,6 +100,7 @@ class ContinuousAsyncProfilerBootProperties {
         return ContinuousAsyncProfilerNotManageableProperties.builder()
                 .loadNativeLibrary(loadNativeLibrary)
                 .dumpIntervalSeconds(dumpInterval == null ? 60 : (int) dumpInterval.getSeconds())
+                .compressionIntervalSeconds(compressionInterval == null ? 600 : (int) compressionInterval.getSeconds())
                 .continuousOutputDir(outputDir == null || outputDir.continuous == null ? "logs/continuous" : outputDir.continuous.toString())
                 .archiveOutputDir(outputDir == null || outputDir.archive == null ? "logs/archive" : outputDir.archive.toString())
                 .profilerLibPath(profilerLibPath == null ? "" : profilerLibPath.toString())
