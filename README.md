@@ -19,7 +19,7 @@ You just need to add dependency to your spring boot application
 <dependency>
     <groupId>com.github.krzysztofslusarski</groupId>
     <artifactId>continuous-async-profiler-spring-starter</artifactId>
-    <version>2.1</version>
+    <version>2.9</version>
 </dependency>
 ```
 
@@ -33,7 +33,7 @@ with a proper version.
 <dependency>
     <groupId>com.github.krzysztofslusarski</groupId>
     <artifactId>continuous-async-profiler</artifactId>
-    <version>2.1</version>
+    <version>2.9</version>
 </dependency>
 ```
 
