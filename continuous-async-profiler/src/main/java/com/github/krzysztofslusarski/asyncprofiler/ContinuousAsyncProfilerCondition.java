@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.krzysztofslusarski.asyncprofiler.mbean;
+package com.github.krzysztofslusarski.asyncprofiler;
 
 import org.springframework.context.annotation.Condition;
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 
-class ContinuousAsyncProfilerMBeanCondition implements Condition {
+class ContinuousAsyncProfilerCondition implements Condition {
     @Override
     public boolean matches(ConditionContext conditionContext, AnnotatedTypeMetadata annotatedTypeMetadata) {
-        String repositoryType = conditionContext.getEnvironment().getProperty("async-profiler.continuous.manageable-properties-repository");
         String enabled = conditionContext.getEnvironment().getProperty("async-profiler.continuous.enabled");
-        return "jmx".equalsIgnoreCase(repositoryType) && Boolean.getBoolean(enabled);
+        return Boolean.getBoolean(enabled);
     }
 }
