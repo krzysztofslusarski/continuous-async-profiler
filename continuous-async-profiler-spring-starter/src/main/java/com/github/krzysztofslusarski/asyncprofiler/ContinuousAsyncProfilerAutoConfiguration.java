@@ -19,12 +19,14 @@ import com.github.krzysztofslusarski.asyncprofiler.mbean.ContinuousAsyncProfiler
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 @Configuration
 @Import(ContinuousAsyncProfilerMBeanConfiguration.class)
 @EnableConfigurationProperties(ContinuousAsyncProfilerBootProperties.class)
+@Conditional(ContinuousAsyncProfilerCondition.class)
 public class ContinuousAsyncProfilerAutoConfiguration {
     @Bean
     ContinuousAsyncProfilerManageableProperties defaultManageableProperties(ContinuousAsyncProfilerBootProperties properties) {
