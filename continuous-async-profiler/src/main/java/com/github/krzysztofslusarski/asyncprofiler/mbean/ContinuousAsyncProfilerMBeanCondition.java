@@ -20,10 +20,22 @@ import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 
 class ContinuousAsyncProfilerMBeanCondition implements Condition {
+
     @Override
     public boolean matches(ConditionContext conditionContext, AnnotatedTypeMetadata annotatedTypeMetadata) {
-        String repositoryType = conditionContext.getEnvironment().getProperty("async-profiler.continuous.manageable-properties-repository");
-        String enabled = conditionContext.getEnvironment().getProperty("async-profiler.continuous.enabled");
-        return "jmx".equalsIgnoreCase(repositoryType) && Boolean.getBoolean(enabled);
+        boolean continuousAsyncProfilerEnabled = isContinuousAsyncProfilerEnabled(conditionContext);
+        boolean jmxEnabled = isJmxEnabled(conditionContext);
+        return continuousAsyncProfilerEnabled && jmxEnabled;
     }
+
+    private boolean isJmxEnabled(ConditionContext conditionContext) {
+        String repositoryType = conditionContext.getEnvironment().getProperty("async-profiler.continuous.manageable-properties-repository");
+        return "jmx".equalsIgnoreCase(repositoryType);
+    }
+
+    private boolean isContinuousAsyncProfilerEnabled(ConditionContext conditionContext) {
+        String enabled = conditionContext.getEnvironment().getProperty("async-profiler.continuous.enabled");
+        return Boolean.parseBoolean(enabled);
+    }
+
 }
