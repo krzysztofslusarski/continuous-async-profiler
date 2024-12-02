@@ -20,9 +20,15 @@ import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 
 class ContinuousAsyncProfilerCondition implements Condition {
+
     @Override
     public boolean matches(ConditionContext conditionContext, AnnotatedTypeMetadata annotatedTypeMetadata) {
-        String enabled = conditionContext.getEnvironment().getProperty("async-profiler.continuous.enabled");
-        return Boolean.getBoolean(enabled);
+        return isContinuousAsyncProfilerEnabled(conditionContext);
     }
+
+    private boolean isContinuousAsyncProfilerEnabled(ConditionContext conditionContext) {
+        String enabled = conditionContext.getEnvironment().getProperty("async-profiler.continuous.enabled");
+        return Boolean.parseBoolean(enabled);
+    }
+
 }
