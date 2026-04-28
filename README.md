@@ -3,7 +3,7 @@ This is a spring boot library that runs async-profiler in the continuous mode.
 
 This project is just a set of tool that run **async-profiler**.  
 
-If you want to use the other version of profiler than **2.9** provided by 
+If you want to use the other version of profiler than **4.4** provided by 
 [AP-Loader](https://github.com/jvm-profiling-tools/ap-loader), you need to specify 
 path to  ```libasyncProfiler.so```. You can do it with spring application properties/yaml/... For example:
 
@@ -19,7 +19,7 @@ You just need to add dependency to your spring boot application
 <dependency>
     <groupId>com.github.krzysztofslusarski</groupId>
     <artifactId>continuous-async-profiler-spring-starter</artifactId>
-    <version>2.9</version>
+    <version>4.4</version>
 </dependency>
 ```
 
@@ -33,7 +33,7 @@ with a proper version.
 <dependency>
     <groupId>com.github.krzysztofslusarski</groupId>
     <artifactId>continuous-async-profiler</artifactId>
-    <version>2.9</version>
+    <version>4.4</version>
 </dependency>
 ```
 
