@@ -16,12 +16,16 @@
 package com.github.krzysztofslusarski.asyncprofiler;
 
 import com.github.krzysztofslusarski.asyncprofiler.mbean.ContinuousAsyncProfilerMBeanConfiguration;
+import java.nio.file.Path;
+import java.time.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationPropertiesBinding;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.convert.converter.Converter;
 
 @Configuration
 @Import(ContinuousAsyncProfilerMBeanConfiguration.class)
@@ -47,5 +51,17 @@ public class ContinuousAsyncProfilerAutoConfiguration {
         }
 
         return new ContinuousAsyncProfiler(manageablePropertiesRepository, defaultNotManageableProperties);
+    }
+
+    @Bean
+    @ConfigurationPropertiesBinding
+    Converter<String, Duration> continuousAsyncProfilerStringToDurationConverter() {
+        return new ContinuousAsyncProfilerStringToDurationConverter();
+    }
+
+    @Bean
+    @ConfigurationPropertiesBinding
+    Converter<String, Path> continuousAsyncProfilerStringToPathConverter() {
+        return new ContinuousAsyncProfilerStringToPathConverter();
     }
 }

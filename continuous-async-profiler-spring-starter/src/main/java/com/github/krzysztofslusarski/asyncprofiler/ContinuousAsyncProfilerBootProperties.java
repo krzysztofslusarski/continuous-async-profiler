@@ -52,7 +52,7 @@ class ContinuousAsyncProfilerBootProperties {
     private OutputDir outputDir;
 
     @Data
-    static class OutputDir {
+    public static class OutputDir {
         /**
          * where continuous output should be stored
          */
