@@ -87,13 +87,18 @@ class ContinuousAsyncProfilerRunner implements Runnable {
             additionalParameters = "," + manageableProperties.getAdditionalParameters().trim();
         }
 
+        String overrideEventSettings = "";
+        if (manageableProperties.getOverrideEventSettings() != null && manageableProperties.getOverrideEventSettings().trim().length() > 0) {
+            overrideEventSettings = "," + manageableProperties.getOverrideEventSettings().trim();
+        }
+
         return String.format(
                 "jfr,event=%s%s,file=%s/%s%s-%s.jfr",
-                event,
-                additionalParameters,
+                overrideEventSettings.isEmpty() ? event : overrideEventSettings,
+                overrideEventSettings.isEmpty() ? additionalParameters : "",
                 notManageableProperties.getContinuousOutputDir(),
                 manageableProperties.getPrefix() == null ? "" : manageableProperties.getPrefix(),
-                event,
+                manageableProperties.isAddEventToFileName() ? event : "",
                 date
         );
     }

@@ -62,6 +62,8 @@ The async-profiler is run **all the time** in **wall-clock mode**. Output from t
 * ```async-profiler.continuous.event = wall``` - async-profiler event to fetch
 * ```async-profiler.continuous.stop-work-file = profiler-stop``` - path to a file, if the file exists then profiler is not running, using this file you can turn
 * ```async-profiler.continuous.additional-parameters``` - additional parameters, for example `alloc=2m,lock=10ms` 
+* ```async-profiler.continuous.override-event-settings``` - override event settings, for example `alloc=2m,lock=10ms`
+* ```async-profiler.continuous.add-event-to-file-name = true``` - whether the event name should be appended to the output file name
 * ```async-profiler.continuous.prefix``` - output file prefix
 on/off profiling at runtime
 
